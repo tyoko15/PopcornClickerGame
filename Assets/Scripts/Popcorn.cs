@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using TMPro;
 
 public class Popcorn : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class Popcorn : MonoBehaviour
     float timer;
 
     private Rigidbody2D rb;
+    public int score;
+    TextMeshProUGUI text;
 
     void Start()
     {
@@ -30,9 +33,11 @@ public class Popcorn : MonoBehaviour
         float randomTorque = Random.Range(-50f, 50f);
         rb.AddTorque(randomTorque);
 
+        text = transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>();
     }
     private void Update()
     {
+        text.text = $"{score.ToString()}";
         if (timer > destroyTime)
         {
             Destroy(gameObject);

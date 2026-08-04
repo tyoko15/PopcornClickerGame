@@ -77,6 +77,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be618e25dfe9c4e4a9d8d7e33b7b5e0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AutoPopcornMaker
+  time: 5
 --- !u!212 &1500967773213831337
 SpriteRenderer:
   serializedVersion: 2
