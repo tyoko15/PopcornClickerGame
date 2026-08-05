@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AutoPopcornMaker : MonoBehaviour
 {
@@ -7,11 +8,12 @@ public class AutoPopcornMaker : MonoBehaviour
     [SerializeField] float time;
     float timer;
 
-
+    Image gauge;
     void Start()
     {
         gameManager = GameManager.Instance;
         spwaner = transform.GetChild(0).gameObject;
+        gauge = transform.GetChild(1).GetChild(1).GetComponent<Image>();
     }
 
     void Update()
@@ -21,6 +23,10 @@ public class AutoPopcornMaker : MonoBehaviour
             gameManager.AutoClick(spwaner);
             timer = 0;
         }
-        else timer += Time.deltaTime;
+        else
+        {
+            timer += Time.deltaTime;
+            gauge.fillAmount = Mathf.InverseLerp(0f, time, timer);
+        }
     }
 }
