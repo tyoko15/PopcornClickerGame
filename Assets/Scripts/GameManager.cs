@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
     [Header("強化できる設定")]
     public int playerLevel;     // プレイヤーレベル
     public long pAmount;         // 合計ポップコーン数
+    public long recordPAmount;         // 合計ポップコーン数
     public int score;           // 通常スコア
     public int times;           // 生産量
     [Header("抽選倍率設定")]
@@ -59,6 +60,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject UI;
     [SerializeField] TextMeshProUGUI pAmountText;
     [SerializeField] TextMeshProUGUI instructionText;
+    [SerializeField] TextMeshProUGUI versionionText;
     [SerializeField] GameObject repeatUI;
     TextMeshProUGUI[] repeatTexts;
     TextMeshProUGUI[] uiTexts = new TextMeshProUGUI[16];
@@ -90,7 +92,7 @@ public class GameManager : MonoBehaviour
     // 連打
     bool repeatFlag;
     int repeatCount;
-    int recordRepeatCount;
+    public int recordRepeatCount;
     float repeatTime = 1f;
     float repeatTimer;
     float repeatBonus = 1f;
@@ -114,6 +116,8 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < uiTexts.Length; i++) uiTexts[i] = UI.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(0).GetChild(i + 1).GetComponent<TextMeshProUGUI>();
         repeatTexts = new TextMeshProUGUI[repeatUI.transform.childCount];
         for (int i = 0; i < repeatUI.transform.childCount; i++) repeatTexts[i] = repeatUI.transform.GetChild(i).GetComponent<TextMeshProUGUI>();
+
+        versionionText.text = $"v{Application.version}";
 
         // ゲーム開始の演出
         instructionText.color = Color.white;
@@ -195,7 +199,11 @@ public class GameManager : MonoBehaviour
     {
         if (repeatFlag)
         {
-            if (recordRepeatCount < repeatCount) recordRepeatCount = repeatCount;
+            if (recordRepeatCount < repeatCount)
+            {
+                recordRepeatCount = repeatCount;
+                RankingManager.Instance.SendRecordRepeatCount();
+            }
             if (repeatTimer > repeatTime)
             {
                 if (!AudioManager.Instance.bgmSources[0].isPlaying) AudioManager.Instance.PlayBGM(0);
@@ -355,6 +363,12 @@ public class GameManager : MonoBehaviour
         }
 
         pAmount += (int)(score * repeatBonus);
+        if (recordPAmount <= pAmount)
+        {
+            recordPAmount = pAmount;
+            RankingManager.Instance.SendRecordPAmount();
+        }
+
         currentUpScore = (int)(score * repeatBonus);
         regularCount++;
         return 1;

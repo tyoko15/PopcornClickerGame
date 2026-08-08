@@ -276,7 +276,7 @@ public class Button : MonoBehaviour
             {
                 case AutoButton.Count:
                     gameManager.autoMakerSettings[(int)kind].makerCount += 1 * m;
-                    gameManager.AddAutoMaker((int)kind);
+                    for (int i = 0; i < m; i++) gameManager.AddAutoMaker((int)kind);                    
                     break;
                 case AutoButton.RecastTime:
                     gameManager.autoMakerSettings[(int)kind].makerRecastTime -= 0.5f * m;

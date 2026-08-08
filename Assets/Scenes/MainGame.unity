@@ -786,6 +786,8 @@ GameObject:
   - component: {fileID: 75829297}
   - component: {fileID: 75829296}
   - component: {fileID: 75829298}
+  - component: {fileID: 75829299}
+  - component: {fileID: 75829300}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -807,6 +809,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   playerLevel: 1
   pAmount: 0
+  recordPAmount: 0
   score: 1
   times: 1
   caramelRate: 20
@@ -842,6 +845,7 @@ MonoBehaviour:
   UI: {fileID: 177904985}
   pAmountText: {fileID: 1100938702}
   instructionText: {fileID: 68430119}
+  versionionText: {fileID: 1731515873}
   repeatUI: {fileID: 520986538}
   buttons: []
   multiple: 1
@@ -857,6 +861,7 @@ MonoBehaviour:
   - {fileID: -2132170630038067474, guid: 4b1092b946d7c1a48b25f8d578777f08, type: 3}
   - {fileID: 3786202426903643945, guid: efc1a39b81e83384fa49913601e667cb, type: 3}
   - {fileID: 6032643094343625259, guid: fc12cae615b858949874f4898c4a85c8, type: 3}
+  recordRepeatCount: 0
   baseLight: {fileID: 619394801}
   spotLight: {fileID: 985432382}
 --- !u!4 &75829297
@@ -888,6 +893,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PopcornPool
   popcornPrefab: {fileID: 9214812849994521946, guid: 0e46c85bf5a4a894dab7304bbaa4c5af, type: 3}
   initialPoolSize: 300
+--- !u!114 &75829299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 75829295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18be03f1abab3ed49bf90445a23637ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RankingManager
+--- !u!114 &75829300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 75829295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a0b2d9b9a77e4cedb5c8ab46e4b0d0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: unityroom::unityroom.Api.UnityroomApiClient
+  HmacKey: 'VNQmwp/qmsYDdeCeGUNpOx20glDep0QaML42Ig/9tSjtaflQPJGyr2Gf5UFTH7kXbgnCnwSMlR9e+3V6NguNUQ== '
 --- !u!224 &132139010 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1026993744611426774, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
