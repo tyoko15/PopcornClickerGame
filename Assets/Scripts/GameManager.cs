@@ -109,8 +109,7 @@ public class GameManager : MonoBehaviour
         Instance = this;
     }
     void Start()
-    {
-        AudioManager.Instance.PlayBGM(0);
+    {        
         uiTexts = new TextMeshProUGUI[16];
         for (int i = 0; i < uiTexts.Length; i++) uiTexts[i] = UI.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(0).GetChild(i + 1).GetComponent<TextMeshProUGUI>();
         repeatTexts = new TextMeshProUGUI[repeatUI.transform.childCount];
@@ -245,8 +244,12 @@ public class GameManager : MonoBehaviour
 
     public void OnClick()
     {
-        if (!goFlag) startFlag = true;
-        for (int i = 0; i < times; i++)
+        if (!goFlag)
+        {
+            AudioManager.Instance.PlayBGM(0);
+            startFlag = true;
+        }
+            for (int i = 0; i < times; i++)
         {
             int kind = Lottery();
             //GameObject p = Instantiate(popcornPrefab, mainMaker.transform.GetChild(0));
