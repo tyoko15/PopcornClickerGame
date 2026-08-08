@@ -15,10 +15,19 @@ public class Popcorn : MonoBehaviour
     public int score;
     TextMeshProUGUI text;
 
-    void Start()
+    void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        text = transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>();
+    }
+    private void OnEnable()
+    {
+        timer = 0f; // タイマーをリセット
+        Pop();      // プールから出るたびに弾けさせる！
+    }
 
+    public void Pop()
+    {
         // ① 上方向を中心に、左右ランダムな角度（斜め上）へ飛ばすベクトルを作成
         // （例: x軸は-0.5〜0.5、y軸は0.8〜1.2の範囲でランダム）
         Vector2 jumpDirection = new Vector2(Random.Range(-0.5f, 0.5f), Random.Range(0.8f, 1.2f)).normalized;
@@ -32,15 +41,16 @@ public class Popcorn : MonoBehaviour
         // ④ 少し回転を加えてポップコーンらしさを出す（回転トルク）
         float randomTorque = Random.Range(-50f, 50f);
         rb.AddTorque(randomTorque);
-
-        text = transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>();
     }
+    
     private void Update()
     {
         text.text = $"{score.ToString()}";
         if (timer > destroyTime)
         {
-            Destroy(gameObject);
+            timer = 0;
+            //Destroy(gameObject);
+            PopcornPool.Instance.ReturnPopcorn(gameObject);
         }
         else timer += Time.deltaTime;
     }

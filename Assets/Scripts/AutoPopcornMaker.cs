@@ -5,8 +5,10 @@ public class AutoPopcornMaker : MonoBehaviour
 {
     GameManager gameManager;
     GameObject spwaner;
-    [SerializeField] float time;
-    float timer;
+    public Kind kind;
+    public float recastTime;
+    float recastTimer;
+    public int times;
 
     Image gauge;
     void Start()
@@ -18,15 +20,18 @@ public class AutoPopcornMaker : MonoBehaviour
 
     void Update()
     {
-        if (timer > time)
+        if (recastTimer > recastTime)
         {
-            gameManager.AutoClick(spwaner);
-            timer = 0;
+            for (int i = 0; i < times; i++) gameManager.AutoClick((int)kind, spwaner);
+            recastTimer = 0;
         }
         else
         {
-            timer += Time.deltaTime;
-            gauge.fillAmount = Mathf.InverseLerp(0f, time, timer);
+            recastTimer += Time.deltaTime;
+            gauge.fillAmount = Mathf.InverseLerp(0f, recastTime, recastTimer);
         }
     }
+
+    public void SetSprite(Sprite sprite) => GetComponent<SpriteRenderer>().sprite = sprite;
+
 }
