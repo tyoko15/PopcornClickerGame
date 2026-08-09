@@ -28,8 +28,8 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     [Header("強化できる設定")]
     public int playerLevel;     // プレイヤーレベル
-    public long pAmount;         // 合計ポップコーン数
-    public long recordPAmount;         // 合計ポップコーン数
+    public double pAmount;         // 合計ポップコーン数
+    public double recordPAmount;         // 合計ポップコーン数
     public int score;           // 通常スコア
     public int times;           // 生産量
     [Header("抽選倍率設定")]
@@ -181,7 +181,7 @@ public class GameManager : MonoBehaviour
             uiTexts[i * 2 + 6].text = $"{autoMakerSettings[i].makerCount}機";
             uiTexts[i * 2 + 7].text = $"{autoMakerSettings[i].makerRecastTime}秒に{autoMakerSettings[i].makerTimes}回";
         }
-        pAmountText.text = $"{pAmount.ToString("N0")}p";
+        pAmountText.text = $"{ScoreFormatter.FormatToJapanese(pAmount)}p";
 
         repeatTexts[1].text = $"{repeatCount.ToString("N0")} COMBO!";
         repeatTexts[2].text = $"BONUS {repeatBonus.ToString("F1")}x";
@@ -257,7 +257,7 @@ public class GameManager : MonoBehaviour
             AudioManager.Instance.PlayBGM(0);
             startFlag = true;
         }
-            for (int i = 0; i < times; i++)
+        for (int i = 0; i < times; i++)
         {
             int kind = Lottery();
             //GameObject p = Instantiate(popcornPrefab, mainMaker.transform.GetChild(0));

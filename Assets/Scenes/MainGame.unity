@@ -808,7 +808,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   playerLevel: 1
-  pAmount: 0
+  pAmount: 1000000
   recordPAmount: 0
   score: 1
   times: 1
@@ -892,7 +892,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PopcornPool
   popcornPrefab: {fileID: 9214812849994521946, guid: 0e46c85bf5a4a894dab7304bbaa4c5af, type: 3}
-  initialPoolSize: 300
+  maxPoolSize: 3000
+  batchSize: 100
+  intervalSeconds: 0.1
 --- !u!114 &75829299
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1362,7 +1364,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: limitLevel
-      value: 56
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: upgradeButton
@@ -2194,7 +2196,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: lockFlag
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: autoButton
@@ -2202,7 +2204,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: limitLevel
-      value: 9
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: baseNeedAmount
@@ -4326,7 +4328,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: lockFlag
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: autoButton
@@ -4334,7 +4336,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: limitLevel
-      value: 9
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: baseNeedAmount
@@ -4717,7 +4719,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: lockFlag
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: autoButton
@@ -4725,7 +4727,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: limitLevel
-      value: 108
+      value: 109
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: baseNeedAmount
@@ -6616,7 +6618,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: lockFlag
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: autoButton
@@ -6624,7 +6626,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: limitLevel
-      value: 540
+      value: 541
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: baseNeedAmount
@@ -7354,7 +7356,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: lockFlag
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: autoButton
@@ -7362,7 +7364,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: limitLevel
-      value: 9
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: baseNeedAmount
@@ -7894,7 +7896,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: lockFlag
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: autoButton
@@ -7902,7 +7904,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: limitLevel
-      value: 10
+      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: baseNeedAmount
@@ -9658,7 +9660,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: lockFlag
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: autoButton
@@ -9666,7 +9668,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: limitLevel
-      value: 9
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: baseNeedAmount
@@ -10187,7 +10189,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &985432382
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10763,7 +10765,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: lockFlag
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: autoButton
@@ -10771,7 +10773,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: limitLevel
-      value: 50
+      value: 51
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: baseNeedAmount
@@ -12009,7 +12011,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: lockFlag
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: autoButton
@@ -12017,7 +12019,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: limitLevel
-      value: 54
+      value: 55
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: baseNeedAmount
@@ -12134,7 +12136,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: lockFlag
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: autoButton
@@ -12142,7 +12144,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: limitLevel
-      value: 10
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: baseNeedAmount
@@ -13581,7 +13583,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: lockFlag
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: autoButton
@@ -13589,7 +13591,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: limitLevel
-      value: 9
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: baseNeedAmount
@@ -14674,7 +14676,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: lockFlag
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: autoButton
@@ -14682,7 +14684,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: limitLevel
-      value: 100
+      value: 101
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: baseNeedAmount
@@ -15843,7 +15845,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: lockFlag
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: autoButton
@@ -15851,7 +15853,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: limitLevel
-      value: 50
+      value: 51
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: baseNeedAmount
@@ -18099,7 +18101,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: lockFlag
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: autoButton
@@ -18107,7 +18109,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: limitLevel
-      value: 9
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: baseNeedAmount
@@ -19754,7 +19756,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: lockFlag
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: autoButton
@@ -19762,7 +19764,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: limitLevel
-      value: 100
+      value: 101
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: baseNeedAmount

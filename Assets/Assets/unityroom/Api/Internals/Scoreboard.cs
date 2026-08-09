@@ -47,7 +47,7 @@ namespace unityroom.Api.Internals
             var score = _scoreHolder.Score;
             if (Util.IsEditor())
             {
-                Debug.Log($"[unityroom] スコア送信 BoardNo={_boardNo} Score={score} (unityroomにゲームをアップロードすると実際に送信されます)");
+                //Debug.Log($"[unityroom] スコア送信 BoardNo={_boardNo} Score={score} (unityroomにゲームをアップロードすると実際に送信されます)");
                 _retryCounter.Reset();
                 _scoreHolder.ResetChangedFlag();
                 yield break;

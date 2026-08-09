@@ -29,13 +29,14 @@ public class Button : MonoBehaviour
     [SerializeField] Kind kind = Kind.Regular;                          // ポップコーンの種類     
     [SerializeField] bool lockFlag;         // 開放あるか
     [SerializeField] int lockPlayerLevel;   // 開放プレイヤーレベル
-    [SerializeField] int baseNeedAmount;    // 初期コスト
+    [SerializeField] long baseNeedAmount;    // 初期コスト
     [SerializeField] float costMultiplier;  // コスト増加率
     [SerializeField] int limitLevel;        // レベル上限
 
     // 
     GameManager gameManager;
-    int needAmount;
+    int multiple;
+    double needAmount;
     bool limitFlag;
     int level = 1;
     Image lockImage;
@@ -70,7 +71,7 @@ public class Button : MonoBehaviour
 
     void Update()
     {
-        if (lockFlag && gameManager.playerLevel >= lockPlayerLevel)
+        if (lockFlag && GameManager.Instance.playerLevel >= lockPlayerLevel)
         {
             lockFlag = false;
             transform.GetChild(4).gameObject.SetActive(lockFlag);
@@ -136,8 +137,8 @@ public class Button : MonoBehaviour
                 case Kind.Rainbow:
                     texts[0].GetComponent<RectTransform>().anchoredPosition = new Vector3(-40f, 25f);
                     for (int i = 0; i < images.Length; i++) images[i].gameObject.SetActive(true);                                            
-                    images[0].sprite = gameManager.makerSprites[(int)kind];
-                    images[1].sprite = gameManager.popcornSprites[(int)kind - 1];
+                    images[0].sprite = GameManager.Instance.makerSprites[(int)kind];
+                    images[1].sprite = GameManager.Instance.popcornSprites[(int)kind - 1];
                     
                     switch (autoButton)
                     {
@@ -155,7 +156,7 @@ public class Button : MonoBehaviour
                 case Kind.Auto:
                     texts[0].GetComponent<RectTransform>().anchoredPosition = new Vector3(-40f, 25f); 
                     images[0].gameObject.SetActive(true);
-                    images[0].sprite = gameManager.makerSprites[0];
+                    images[0].sprite = GameManager.Instance.makerSprites[0];
                     switch (autoButton)
                     {
                         case AutoButton.Count:
@@ -188,14 +189,14 @@ public class Button : MonoBehaviour
     {
         if (!limitFlag && !lockFlag)
         {
-            if (gameManager.pAmount >= needAmount)
+            if (GameManager.Instance.pAmount >= needAmount)
             {
                 AudioManager.Instance.PlayOneShotSE(1);
                 int l = level;
                 int m = GameManager.Instance.multiple;
                 if (level + 1 * GameManager.Instance.multiple >= limitLevel) m = limitLevel - level;
                 level += m;
-                gameManager.pAmount -= needAmount;
+                GameManager.Instance.pAmount -= needAmount;
                 UpdataUpgrade();
 
                 if (limitLevel == level)
@@ -207,28 +208,27 @@ public class Button : MonoBehaviour
                 needAmount = CalculationNeedAmount();
             }
 
-            UpdateUI();
+            UpdateCostUI(0);
         }
     }
 
     void UpdateCostUI(int m)
     {
+        multiple = Mathf.Min(GameManager.Instance.multiple, limitLevel - level);
         needAmount = CalculationNeedAmount();
         UpdateUI();
     }
 
-    int CalculationNeedAmount()
+    double CalculationNeedAmount()
     {
-        int need = 0;
+        double need = 0;
         int l = level;
-        int m = GameManager.Instance.multiple;
-        if (level + 1 * GameManager.Instance.multiple >= limitLevel) m = limitLevel - level;
-        for (int i = 0; i < m; i++)
+        for (int i = 0; i < multiple; i++)
         {
-            need += (int)Mathf.Floor(baseNeedAmount * Mathf.Pow(costMultiplier, l - 1));
+            need += (double)Mathf.Floor(baseNeedAmount * Mathf.Pow(costMultiplier, l - 1));
             l++;
         }
-        return need; 
+        return need;
     }
 
     // 上限時に実行
@@ -244,29 +244,27 @@ public class Button : MonoBehaviour
     void UpdataUpgrade()
     {
         int l = level;
-        int m = GameManager.Instance.multiple;
-        if (l + 1 * GameManager.Instance.multiple >= limitLevel) m = limitLevel - l;
         if (upgradeButton != UpgradeButton.None)
         {
             switch (upgradeButton)
             {
                 case UpgradeButton.PlayerLevel:
-                    gameManager.playerLevel += 1 * m;
+                    GameManager.Instance.playerLevel += 1 * multiple;
                     break;
                 case UpgradeButton.ScoreUp:
-                    gameManager.score += 1 * m;
+                    GameManager.Instance.score += 1 * multiple;
                     break;
                 case UpgradeButton.Times:
-                    gameManager.times += 1 * m;
+                    GameManager.Instance.times += 1 * multiple;
                     break;
                 case UpgradeButton.CaramelRate:
-                    gameManager.caramelRate += 1 * m;
+                    GameManager.Instance.caramelRate += 1 * multiple;
                     break;
                 case UpgradeButton.ChoocolateRate:
-                    gameManager.chocolateRate += 1 * m;
+                    GameManager.Instance.chocolateRate += 1 * multiple;
                     break;
                 case UpgradeButton.RainbowRate:
-                    gameManager.rainbowRate += 1 * m;
+                    GameManager.Instance.rainbowRate += 1 * multiple;
                     break;
             }
         }
@@ -275,17 +273,17 @@ public class Button : MonoBehaviour
             switch (autoButton)
             {
                 case AutoButton.Count:
-                    gameManager.autoMakerSettings[(int)kind].makerCount += 1 * m;
-                    for (int i = 0; i < m; i++) gameManager.AddAutoMaker((int)kind);                    
+                    GameManager.Instance.autoMakerSettings[(int)kind].makerCount += 1 * multiple;
+                    for (int i = 0; i < multiple; i++) GameManager.Instance.AddAutoMaker((int)kind);                    
                     break;
                 case AutoButton.RecastTime:
-                    gameManager.autoMakerSettings[(int)kind].makerRecastTime -= 0.5f * m;
+                    GameManager.Instance.autoMakerSettings[(int)kind].makerRecastTime -= 0.5f * multiple;
                     break;
                 case AutoButton.Times:
-                    gameManager.autoMakerSettings[(int)kind].makerTimes += 1 * m;
+                    GameManager.Instance.autoMakerSettings[(int)kind].makerTimes += 1 * multiple;
                     break;
             }
-            gameManager.UpdateAutoMakerSetting((int)kind);
+            GameManager.Instance.UpdateAutoMakerSetting((int)kind);
         }
 
     }
@@ -293,8 +291,8 @@ public class Button : MonoBehaviour
     // Textを更新
     void UpdateUI()
     {
-        texts[1].text = $"Lv.{level}";
-        texts[2].text = $"{needAmount.ToString("N0")}p";
+        texts[1].text = $"Lv.{level}\nMAX {limitLevel}";
+        texts[2].text = $"{ScoreFormatter.FormatToJapanese(needAmount)}p";
         float before = 0;
         float after = 0;
         string p = "%";
@@ -303,58 +301,53 @@ public class Button : MonoBehaviour
             switch (upgradeButton)
             {
                 case UpgradeButton.PlayerLevel:
-                    before = gameManager.playerLevel;
-                    after = before + 1 * gameManager.multiple;
-                    if (level + 1 * gameManager.multiple >= limitLevel) after = before + 1 * limitLevel - level;                    
+                    before = GameManager.Instance.playerLevel;
+                    after = before + 1 * multiple;
                     p = "Lv.";
                     texts[3].text = $"{p}{before}→{p}{after}";
                     return;                    
                 case UpgradeButton.ScoreUp:
-                    before = gameManager.score;
+                    before = GameManager.Instance.score;
                     p = "p";
                     break;
                 case UpgradeButton.Times:
-                    before = gameManager.times;
+                    before = GameManager.Instance.times;
                     p = "回";
                     break;
                 case UpgradeButton.CaramelRate:
-                    before = gameManager.caramelRate;
+                    before = GameManager.Instance.caramelRate;
                     break;
                 case UpgradeButton.ChoocolateRate:
-                    before = gameManager.chocolateRate;
+                    before = GameManager.Instance.chocolateRate;
                     break;
                 case UpgradeButton.RainbowRate:
-                    before = gameManager.rainbowRate;
+                    before = GameManager.Instance.rainbowRate;
                     break;
             }
-            after = before + 1 * gameManager.multiple;
-            if (level + 1 * gameManager.multiple >= limitLevel) after = before + 1 * limitLevel - level;
+            after = before + 1 * multiple;
         }
         else if (autoButton != AutoButton.None)
         {
             switch (autoButton)
             {
                 case AutoButton.Count:
-                    before = gameManager.autoMakerSettings[(int)kind].makerCount;
-                    after = before + 1 * gameManager.multiple;
-                    if (level + 1 * gameManager.multiple >= limitLevel) after = before + 1 * limitLevel - level;
+                    before = GameManager.Instance.autoMakerSettings[(int)kind].makerCount;
+                    after = before + 1 * multiple;
                     p = "機";
                     break;
                 case AutoButton.RecastTime:
-                    before = gameManager.autoMakerSettings[(int)kind].makerRecastTime;
-                    after = before - 0.5f * gameManager.multiple;
-                    if (level + 1 * gameManager.multiple >= limitLevel) after = before - 0.5f * limitLevel - level;
+                    before = GameManager.Instance.autoMakerSettings[(int)kind].makerRecastTime;
+                    after = before - 0.5f * multiple;
                     p = "秒";
                     break;
                 case AutoButton.Times:
-                    before = gameManager.autoMakerSettings[(int)kind].makerTimes;
-                    after = before + 1 * gameManager.multiple;
-                    if (level + 1 * gameManager.multiple >= limitLevel) after = before + 1 * limitLevel - level;
+                    before = GameManager.Instance.autoMakerSettings[(int)kind].makerTimes;
+                    after = before + 1 * multiple;
                     p = "回";
                     break;
             }
         }
-        
+
         texts[3].text = $"{before}{p}→{after}{p}";
     }
 }

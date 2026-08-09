@@ -12,7 +12,8 @@ public class RankingManager : MonoBehaviour
 
     public void SendRecordPAmount()
     {
-        UnityroomApiClient.Instance.SendScore(1, GameManager.Instance.recordPAmount, ScoreboardWriteMode.HighScoreDesc);
+        float sendAmount = (float)GameManager.Instance.pAmount;
+        UnityroomApiClient.Instance.SendScore(1, sendAmount, ScoreboardWriteMode.HighScoreDesc);
     }
     public void SendRecordRepeatCount()
     {
