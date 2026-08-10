@@ -5,25 +5,23 @@ public class Popcorn : MonoBehaviour
 {
     [Header("飛ぶ勢いの設定")]
     [SerializeField] private float minForce = 3f;  // 最小の勢い
-    [SerializeField] private float maxForce = 6f;  // 最大の勢い
+    [SerializeField] private float maxForce = 3f;  // 最大の勢い
 
     [Header("消滅までの時間（秒）")]
-    [SerializeField] private float destroyTime = 2.0f;
-    float timer;
+    [SerializeField] private float returnTime = 2.0f;
 
     private Rigidbody2D rb;
     public int score;
-    TextMeshProUGUI text;
-
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        text = transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>();
     }
     private void OnEnable()
     {
-        timer = 0f; // タイマーをリセット
+        minForce *= GameManager.Instance.popcornForceMultiple;
+        maxForce = minForce + 3;
         Pop();      // プールから出るたびに弾けさせる！
+        Invoke("ReturnPopcorn", returnTime);
     }
 
     public void Pop()
@@ -42,16 +40,9 @@ public class Popcorn : MonoBehaviour
         float randomTorque = Random.Range(-50f, 50f);
         rb.AddTorque(randomTorque);
     }
-    
-    private void Update()
+
+    void ReturnPopcorn()
     {
-        text.text = $"{score.ToString()}";
-        if (timer > destroyTime)
-        {
-            timer = 0;
-            //Destroy(gameObject);
-            PopcornPool.Instance.ReturnPopcorn(gameObject);
-        }
-        else timer += Time.deltaTime;
+        PopcornPool.Instance.ReturnPopcorn(gameObject);
     }
 }

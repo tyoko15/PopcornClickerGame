@@ -86,6 +86,7 @@ public class GameManager : MonoBehaviour
     [Header("ポップコーンのイラスト設定")]
     [SerializeField] public Sprite[] popcornSprites;
     [SerializeField] GameObject popcornPrefab;
+    public float popcornForceMultiple = 1f;
     [Header("メーカーのイラスト設定")]
     [SerializeField] public Sprite[] makerSprites;
 
@@ -106,6 +107,10 @@ public class GameManager : MonoBehaviour
     bool goFlag;
     float startTime = 0.8f;
     float startTimer;
+
+    // 検証用オートクリッカー
+    float autoTime = 0.01f;
+    float autoTimer;
     private void Awake()
     {
         Instance = this;
@@ -141,6 +146,13 @@ public class GameManager : MonoBehaviour
 
         UpdateUI();
         Repeat();
+
+        //if (autoTimer > autoTime)
+        //{
+        //    autoTimer = 0;
+        //    OnClick();
+        //}
+        //else autoTimer += Time.deltaTime;
     }
 
     void GameStart()
@@ -214,6 +226,7 @@ public class GameManager : MonoBehaviour
                 instructionText.color = Color.white;
                 baseLight.intensity = 1f;
                 spotLight.gameObject.SetActive(false);
+                popcornForceMultiple = 1f;
                 repeatFlag = false;
             }
             else repeatTimer += Time.deltaTime;
@@ -233,9 +246,10 @@ public class GameManager : MonoBehaviour
             RainbowColorText(repeatTexts[2], 0.5f, 0.25f);
             baseLight.intensity = 0.2f;
             spotLight.gameObject.SetActive(true);
+            popcornForceMultiple = 1 + (Mathf.FloorToInt((repeatCount - 100) / 180.0f)) * 0.2f;
 
-            repeatBonus = 3f + 0.8f * ((repeatCount - 100) / 90);
-            nextBonusCount = 90 - (repeatCount - 100) % 90;
+            repeatBonus = 3f + 0.8f * ((repeatCount - 10) / 90);
+            nextBonusCount = 90 - (repeatCount - 10) % 90;
             nextBonus = 0.8f;
         }
         else
@@ -244,9 +258,10 @@ public class GameManager : MonoBehaviour
             RainbowColorText(instructionText, 1f, 0.1f);
             instructionText.text = $"!! SUPER FEVER !!";
             RainbowColorText(repeatTexts[2], 1f, 0.1f);
-            repeatBonus = 11;
-            nextBonusCount = 0;
-            nextBonus = 0f;
+            popcornForceMultiple = 2f;
+            repeatBonus = 11 + Mathf.FloorToInt((repeatCount - 1000) / 100) * 0.5f;
+            nextBonusCount = 100 - (repeatCount - 1000) % 100;
+            nextBonus = 0.5f;
         }
     }
 

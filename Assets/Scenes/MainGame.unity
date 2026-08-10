@@ -808,7 +808,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   playerLevel: 1
-  pAmount: 1000000
+  pAmount: 0
   recordPAmount: 0
   score: 1
   times: 1
@@ -855,6 +855,7 @@ MonoBehaviour:
   - {fileID: -1928676437121707661, guid: 29ecf989a329d1047b53232d7df8158d, type: 3}
   - {fileID: -557041589089568047, guid: 372b91079cf6b1e45b7cc1e4acd0cbd6, type: 3}
   popcornPrefab: {fileID: 9214812849994521946, guid: 0e46c85bf5a4a894dab7304bbaa4c5af, type: 3}
+  popcornForceMultiple: 1
   makerSprites:
   - {fileID: -4242455249001066966, guid: 56b41423aa2b41a48a8027b445a72f98, type: 3}
   - {fileID: 3282982105154967326, guid: 4620a6b5aae78664e855597e984fc95c, type: 3}
@@ -7668,7 +7669,7 @@ GameObject:
   - component: {fileID: 795288410}
   - component: {fileID: 795288409}
   m_Layer: 5
-  m_Name: Score (1)
+  m_Name: Times
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

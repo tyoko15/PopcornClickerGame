@@ -35,10 +35,10 @@ namespace unityroom.Api.Internals
         internal void AddScore(float score, ScoreboardWriteMode mode)
         {
             var scoreUpdated = _scoreHolder.SetNewScore(score, mode);
-            Debug.Log(
-                scoreUpdated ? $"[unityroom] スコア送信予約 BoardNo={_boardNo} Score={score}"
-                    : $"[unityroom] ハイスコア未更新のため送信しません BoardNo={_boardNo} Score={score}"
-            );
+            //Debug.Log(
+            //    scoreUpdated ? $"[unityroom] スコア送信予約 BoardNo={_boardNo} Score={score}"
+            //        : $"[unityroom] ハイスコア未更新のため送信しません BoardNo={_boardNo} Score={score}"
+            //);
         }
 
         private IEnumerator SendScoreEnumerator()
