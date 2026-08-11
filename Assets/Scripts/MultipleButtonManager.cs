@@ -19,8 +19,8 @@ public class MultipleButtonManager : MonoBehaviour
     public void MultipleButton(int i)
     {
         if (i == 0) multiple = 1;
-        else if (i == 1) multiple = 10;
-        else if (i == 2) multiple = 50;
+        else if (i == 1) multiple = 5;
+        else if (i == 2) multiple = 10;
         for (int j = 0; j < images.Length; j++) images[j].color = Color.gray;
         images[i].color = Color.orange;
         GameManager.Instance.Multiple = multiple;

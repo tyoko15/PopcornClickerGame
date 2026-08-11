@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
@@ -240,13 +241,17 @@ public class GameManager : MonoBehaviour
         }
         else if (repeatCount < 1000)
         {
-            if (!AudioManager.Instance.bgmSources[1].isPlaying) AudioManager.Instance.PlayBGM(1);
+            if (!AudioManager.Instance.bgmSources[1].isPlaying)
+            {
+                AudioManager.Instance.PlayBGM(1);
+                AudioManager.Instance.bgmSources[1].pitch = 0.7f;
+            }
             RainbowColorText(instructionText, 0.5f, 0.25f);
             instructionText.text = $"!! FEVER !!";
             RainbowColorText(repeatTexts[2], 0.5f, 0.25f);
             baseLight.intensity = 0.2f;
             spotLight.gameObject.SetActive(true);
-            popcornForceMultiple = 1 + (Mathf.FloorToInt((repeatCount - 100) / 180.0f)) * 0.2f;
+            popcornForceMultiple = 1 + (Mathf.FloorToInt((repeatCount - 100) / 180f)) * 0.2f;
 
             repeatBonus = 3f + 0.8f * ((repeatCount - 10) / 90);
             nextBonusCount = 90 - (repeatCount - 10) % 90;
@@ -254,9 +259,58 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            if (!AudioManager.Instance.bgmSources[2].isPlaying) AudioManager.Instance.PlayBGM(2);
+            //if (!AudioManager.Instance.bgmSources[2].isPlaying) AudioManager.Instance.PlayBGM(2);
             RainbowColorText(instructionText, 1f, 0.1f);
-            instructionText.text = $"!! SUPER FEVER !!";
+            if (repeatBonus >= 100)
+            {
+                instructionText.text = "!! ULTIMATE FEVER !!";
+                AudioManager.Instance.bgmSources[1].pitch = 1.2f;
+            }
+            else if (repeatBonus >= 90)
+            {
+                instructionText.text = "!! OVERLOAD FEVER !!";
+                AudioManager.Instance.bgmSources[1].pitch = 1.15f;
+            }
+            else if (repeatBonus >= 80)
+            {
+                instructionText.text = "!! INFINITY FEVER !!";
+                AudioManager.Instance.bgmSources[1].pitch = 1.1f;
+            }
+            else if (repeatBonus >= 70)
+            {
+                instructionText.text = "!! COSMIC FEVER !!";
+                AudioManager.Instance.bgmSources[1].pitch = 1.05f;
+            }
+            else if (repeatBonus >= 60)
+            {
+                instructionText.text = "!! EXTREME FEVER !!";
+                AudioManager.Instance.bgmSources[1].pitch = 1f;
+            }
+            else if (repeatBonus >= 50)
+            {
+                instructionText.text = "!! ULTRA FEVER !!";
+                AudioManager.Instance.bgmSources[1].pitch = 0.95f;
+            }
+            else if (repeatBonus >= 40)
+            {
+                instructionText.text = "!! GIGA FEVER !!";
+                AudioManager.Instance.bgmSources[1].pitch = 0.9f;
+            }
+            else if (repeatBonus >= 30)
+            {
+                instructionText.text = "!! MEGA FEVER !!";
+                AudioManager.Instance.bgmSources[1].pitch = 0.85f;
+            }
+            else if (repeatBonus >= 20)
+            {
+                instructionText.text = "!! HYPER FEVER !!";
+                AudioManager.Instance.bgmSources[1].pitch = 0.8f;
+            }
+            else if (repeatBonus >= 11)
+            {
+                instructionText.text = "!! SUPER FEVER !!";
+                AudioManager.Instance.bgmSources[1].pitch = 0.75f;
+            }    
             RainbowColorText(repeatTexts[2], 1f, 0.1f);
             popcornForceMultiple = 2f;
             repeatBonus = 11 + Mathf.FloorToInt((repeatCount - 1000) / 100) * 0.5f;

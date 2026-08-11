@@ -51,7 +51,8 @@ public class Button : MonoBehaviour
             GameManager.Instance.UpdateMultiple += UpdateCostUI;
         }
 
-        UpdateCostUI(1);
+        if (limitFlag) Limit(); 
+        else UpdateCostUI(1);
     }
 
     private void OnDisable()
@@ -76,7 +77,8 @@ public class Button : MonoBehaviour
             lockFlag = false;
             transform.GetChild(4).gameObject.SetActive(lockFlag);
         }
-
+        if (GameManager.Instance.pAmount >= needAmount) transform.GetComponent<Image>().color = Color.white;
+        else transform.GetComponent<Image>().color = Color.gray;
     }
     
     // •Ï”‚Ì‰Šú‰»
@@ -216,7 +218,8 @@ public class Button : MonoBehaviour
     {
         multiple = Mathf.Min(GameManager.Instance.multiple, limitLevel - level);
         needAmount = CalculationNeedAmount();
-        UpdateUI();
+        if (!limitFlag) UpdateUI();
+        else Limit();
     }
 
     double CalculationNeedAmount()

@@ -50,7 +50,7 @@ public class PopcornPool : MonoBehaviour
             yield return new WaitForSeconds(intervalSeconds);
         }
 
-        Debug.Log($"🍿 ポップコーンプール準備完了！（合計: {createdCount}個）");
+        //Debug.Log($"🍿 ポップコーンプール準備完了！（合計: {createdCount}個）");
     }
 
     // 🍿 ポップコーンを取得・使い回す（上限を超えたら一番古いやつを画面上から強制移動して再利用）

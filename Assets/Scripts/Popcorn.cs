@@ -4,8 +4,8 @@ using TMPro;
 public class Popcorn : MonoBehaviour
 {
     [Header("飛ぶ勢いの設定")]
-    [SerializeField] private float minForce = 3f;  // 最小の勢い
-    [SerializeField] private float maxForce = 3f;  // 最大の勢い
+    private float minForce;  // 最小の勢い
+    private float maxForce;  // 最大の勢い
 
     [Header("消滅までの時間（秒）")]
     [SerializeField] private float returnTime = 2.0f;
@@ -18,7 +18,7 @@ public class Popcorn : MonoBehaviour
     }
     private void OnEnable()
     {
-        minForce *= GameManager.Instance.popcornForceMultiple;
+        minForce = 3 * GameManager.Instance.popcornForceMultiple;
         maxForce = minForce + 3;
         Pop();      // プールから出るたびに弾けさせる！
         Invoke("ReturnPopcorn", returnTime);

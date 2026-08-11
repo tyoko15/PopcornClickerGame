@@ -296,7 +296,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -275}
-  m_SizeDelta: {x: 250, y: 50}
+  m_SizeDelta: {x: 250, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &36873215
 MonoBehaviour:
@@ -544,7 +544,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -200}
-  m_SizeDelta: {x: 200, y: 50}
+  m_SizeDelta: {x: 200, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &68430119
 MonoBehaviour:
@@ -893,9 +893,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PopcornPool
   popcornPrefab: {fileID: 9214812849994521946, guid: 0e46c85bf5a4a894dab7304bbaa4c5af, type: 3}
-  maxPoolSize: 3000
+  maxPoolSize: 15000
   batchSize: 100
-  intervalSeconds: 0.1
+  intervalSeconds: 0.2
 --- !u!114 &75829299
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2197,7 +2197,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: lockFlag
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: autoButton
@@ -2616,7 +2616,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -100}
-  m_SizeDelta: {x: 250, y: 50}
+  m_SizeDelta: {x: 250, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &316413098
 MonoBehaviour:
@@ -2828,7 +2828,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -45}
-  m_SizeDelta: {x: 300, y: 50}
+  m_SizeDelta: {x: 300, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &320495562
 MonoBehaviour:
@@ -4329,7 +4329,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: lockFlag
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: autoButton
@@ -4720,7 +4720,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: lockFlag
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: autoButton
@@ -5212,7 +5212,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 0.24313726, g: 0.15294118, b: 0.13725491, a: 0.42352942}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -5288,7 +5288,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 0.24313726, g: 0.15294118, b: 0.13725491, a: 0.88235295}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -6366,7 +6366,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: x50
+  m_text: x10
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8ffa79188d245124aa8dbc9d2e623559, type: 2}
   m_sharedMaterial: {fileID: 5367185002476623082, guid: 8ffa79188d245124aa8dbc9d2e623559, type: 2}
@@ -6619,7 +6619,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: lockFlag
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: autoButton
@@ -6969,9 +6969,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'x10
-
-'
+  m_text: x5
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8ffa79188d245124aa8dbc9d2e623559, type: 2}
   m_sharedMaterial: {fileID: 5367185002476623082, guid: 8ffa79188d245124aa8dbc9d2e623559, type: 2}
@@ -7357,7 +7355,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: lockFlag
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: autoButton
@@ -7897,7 +7895,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: lockFlag
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: autoButton
@@ -8203,7 +8201,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -200}
-  m_SizeDelta: {x: 250, y: 50}
+  m_SizeDelta: {x: 250, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &818757910
 MonoBehaviour:
@@ -9661,7 +9659,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: lockFlag
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: autoButton
@@ -10766,7 +10764,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: lockFlag
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: autoButton
@@ -10965,7 +10963,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 50}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1100938702
 MonoBehaviour:
@@ -12012,7 +12010,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: lockFlag
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: autoButton
@@ -12137,7 +12135,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: lockFlag
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: autoButton
@@ -13584,7 +13582,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: lockFlag
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: autoButton
@@ -14677,7 +14675,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: lockFlag
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: autoButton
@@ -14739,7 +14737,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -150}
-  m_SizeDelta: {x: 250, y: 50}
+  m_SizeDelta: {x: 250, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1532592946
 MonoBehaviour:
@@ -15846,7 +15844,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: lockFlag
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: autoButton
@@ -16436,7 +16434,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: -120, y: 25}
-  m_SizeDelta: {x: 200, y: 50}
+  m_SizeDelta: {x: 200, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1731515873
 MonoBehaviour:
@@ -18102,7 +18100,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: lockFlag
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: autoButton
@@ -18544,7 +18542,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -325}
-  m_SizeDelta: {x: 250, y: 50}
+  m_SizeDelta: {x: 250, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1984396839
 MonoBehaviour:
@@ -19757,7 +19755,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: lockFlag
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8585621710517316662, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
       propertyPath: autoButton
