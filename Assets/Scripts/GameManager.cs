@@ -1,7 +1,7 @@
-﻿using System;
+﻿using JetBrains.Annotations;
+using System;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
@@ -29,8 +29,9 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     [Header("強化できる設定")]
     public int playerLevel;     // プレイヤーレベル
-    public double pAmount;         // 合計ポップコーン数
-    public double recordPAmount;         // 合計ポップコーン数
+    public double totalPAmount;      // 合計ポップコーン数
+    public double pAmount;      // 合計ポップコーン数
+    public double recordPAmount;// 合計ポップコーン数
     public int score;           // 通常スコア
     public int times;           // 生産量
     [Header("抽選倍率設定")]
@@ -47,6 +48,13 @@ public class GameManager : MonoBehaviour
     int caramelCount;
     int chocolateCount;
     int rainbowCount;
+    int totalPopcornCount;
+
+    // プレイ時間
+    int hour;
+    int minute;
+    float second;
+    bool timerFlag;
 
     int currentUpScore;
     [Header("各メーカー設定")]
@@ -64,7 +72,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI versionionText;
     [SerializeField] GameObject repeatUI;
     TextMeshProUGUI[] repeatTexts;
-    TextMeshProUGUI[] uiTexts = new TextMeshProUGUI[16];
+    TextMeshProUGUI[] uiTexts = new TextMeshProUGUI[25];
     TextMeshProUGUI[] recordTexts = new TextMeshProUGUI[5];
     [SerializeField] GameObject[] buttons;
     [HideInInspector] public int multiple = 1;
@@ -83,6 +91,10 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+    // 情報一覧用
+    int totalLimitLevel = 2275;
+    public int currentTotalLimitLevel;
+
     // Popcorn
     [Header("ポップコーンのイラスト設定")]
     [SerializeField] public Sprite[] popcornSprites;
@@ -92,6 +104,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] public Sprite[] makerSprites;
 
     // 連打
+    
     bool repeatFlag;
     int repeatCount;
     public int recordRepeatCount;
@@ -100,6 +113,11 @@ public class GameManager : MonoBehaviour
     float repeatBonus = 1f;
     int nextBonusCount;
     float nextBonus;
+
+    // 連打速度
+    int currentCPS;
+    int maxCPS;
+    Queue<float> clickTimestamps = new Queue<float>();
 
     // ゲーム開始の演出
     [SerializeField] Light2D baseLight;
@@ -118,7 +136,7 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {        
-        uiTexts = new TextMeshProUGUI[16];
+        uiTexts = new TextMeshProUGUI[25];
         for (int i = 0; i < uiTexts.Length; i++) uiTexts[i] = UI.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(0).GetChild(i + 1).GetComponent<TextMeshProUGUI>();
         repeatTexts = new TextMeshProUGUI[repeatUI.transform.childCount];
         for (int i = 0; i < repeatUI.transform.childCount; i++) repeatTexts[i] = repeatUI.transform.GetChild(i).GetComponent<TextMeshProUGUI>();
@@ -145,8 +163,11 @@ public class GameManager : MonoBehaviour
             return;
         }
 
+        Timer();
+
         UpdateUI();
         Repeat();
+        CPS();
 
         //if (autoTimer > autoTime)
         //{
@@ -183,29 +204,140 @@ public class GameManager : MonoBehaviour
 
     void UpdateUI()
     {
-        uiTexts[0].text = $"{score}p";
-        uiTexts[1].text = $"{times}回";
-        uiTexts[2].text = $"{caramelRate}%";
-        uiTexts[3].text = $"{chocolateRate}%";
-        uiTexts[4].text = $"{rainbowRate}%";
-        uiTexts[5].text = $"すべて外れると出現";
+        int u = 0;
+        // プレイヤー情報
+        uiTexts[u++].text = $"Lv.{playerLevel}";
+        uiTexts[u++].text = $"{OverallReinforcementRate().ToString("F2")}%";
+        uiTexts[u++].text = $"{ScoreFormatter.FormatToJapanese(totalPAmount)}p";
+        uiTexts[u++].text = $"{ScoreFormatter.FormatToJapanese(recordPAmount)}p";
+        uiTexts[u++].text = $"{ScoreFormatter.FormatToJapanese(clickCount)}回";
+        uiTexts[u++].text = $"{ScoreFormatter.FormatToJapanese(maxCPS)} 回/秒";
+        uiTexts[u++].text = $"{hour.ToString("00")}:{minute.ToString("00")}:{second.ToString("00")}";
+        // 効率
+        uiTexts[u++].text = $"{ScoreFormatter.FormatToJapanese(CalculateClickExpectedValue())}p";
+        uiTexts[u++].text = $"{ScoreFormatter.FormatToJapanese(GetAutoMachineCPS())} p/s";
+        // 通常スコア&生産量
+        uiTexts[u++].text = $"{score}p";
+        uiTexts[u++].text = $"{times}回";
+        // 出現確率&倍率
+        uiTexts[u++].text = $"{caramelRate}%";
+        uiTexts[u++].text = $"{chocolateRate}%";
+        uiTexts[u++].text = $"{rainbowRate}%";
+        uiTexts[u++].text = $"すべて外れると出現";
+        // 自動マシン
         for (int i = 0; i < autoMakerSettings.Length; i++)
         {
-            uiTexts[i * 2 + 6].text = $"{autoMakerSettings[i].makerCount}機";
-            uiTexts[i * 2 + 7].text = $"{autoMakerSettings[i].makerRecastTime}秒に{autoMakerSettings[i].makerTimes}回";
+            uiTexts[i * 2 + u].text = $"{autoMakerSettings[i].makerCount}機";
+            uiTexts[i * 2 + u + 1].text = $"{autoMakerSettings[i].makerRecastTime}秒に{autoMakerSettings[i].makerTimes}回";
         }
         pAmountText.text = $"{ScoreFormatter.FormatToJapanese(pAmount)}p";
 
-        repeatTexts[1].text = $"{repeatCount.ToString("N0")} COMBO!";
-        repeatTexts[2].text = $"BONUS {repeatBonus.ToString("F1")}x";
-        repeatTexts[3].text = $"次のアップまで\n残り{nextBonusCount}回(+{nextBonus.ToString("F1")}x)";
-        repeatTexts[5].text = $"{recordRepeatCount.ToString("N0")}回";
+        u = 1;
+        repeatTexts[u++].text = $"{repeatCount.ToString("N0")} COMBO!";
+        repeatTexts[u++].text = $"BONUS {repeatBonus.ToString("F1")}x";
+        repeatTexts[u++].text = $"次のアップまで\n残り{nextBonusCount}回(+{nextBonus.ToString("F1")}x)";
+        repeatTexts[u++ + 1].text = $"{recordRepeatCount.ToString("N0")}回";
 
-        recordTexts[0].text = $"{regularCount}個";
-        recordTexts[1].text = $"{caramelCount}個";
-        recordTexts[2].text = $"{chocolateCount}個";
-        recordTexts[3].text = $"{rainbowCount}個";
-        recordTexts[4].text = $"{clickCount}回";
+        u = 0;
+        recordTexts[u++].text = $"{ScoreFormatter.FormatToJapanese(regularCount)}個";
+        recordTexts[u++].text = $"{ScoreFormatter.FormatToJapanese(caramelCount)}個";
+        recordTexts[u++].text = $"{ScoreFormatter.FormatToJapanese(chocolateCount)}個";
+        recordTexts[u++].text = $"{ScoreFormatter.FormatToJapanese(rainbowCount)}個";
+        recordTexts[u++].text = $"{ScoreFormatter.FormatToJapanese(totalPopcornCount)}個";
+    }
+
+    float OverallReinforcementRate()
+    {
+        if (currentTotalLimitLevel <= 0) currentTotalLimitLevel = 1;
+        
+        float r = (float)currentTotalLimitLevel / totalLimitLevel;
+        if (currentTotalLimitLevel == 1) r = 0;
+        return r * 100;
+    }
+
+    void Timer()
+    {
+
+        if (hour == 99 && minute == 59 && second > 60f) timerFlag = true;
+        if (timerFlag) return;
+        second += Time.deltaTime;
+
+        if (second >= 60f)
+        {
+            second -= 60f;
+            minute++;
+        }
+        if (minute == 60)
+        {
+            minute = 0;
+            hour++;
+        }
+
+    }
+    double CalculateClickExpectedValue()
+    {
+        // 各確率（% を 0.0~1.0 の少数に変換）
+        double pRainbow = rainbowRate / 100.0;   // 1  -> 0.01
+        double pChoco = chocolateRate / 100.0;   // 10 -> 0.10
+        double pCaramel = caramelRate / 100.0;   // 20 -> 0.20
+
+        // 塩の確率（100% からレアポップコーンの合計確率を引いた残り）
+        double pSalt = Math.Max(0, 1.0 - (pRainbow + pChoco + pCaramel));
+
+        // 1個あたりの平均倍率
+        double averageMultiplier = (pRainbow * 5.0) + (pChoco * 3.0) + (pCaramel * 2.0) + (pSalt * 1.0);
+
+        // 1クリックの期待値 ＝ 基本スコア × 生成個数 × 平均倍率
+        double expectedValue = score * times * averageMultiplier;
+
+        return expectedValue;
+    }
+
+    double GetClickEfficiency()
+    {
+        // 各確率（%表記なら 100 で割って 0.0~1.0 に変換）
+        double pCaramel = caramelRate / 100.0;
+        double pChoco = chocolateRate / 100.0;
+        double pRainbow = rainbowRate / 100.0;
+
+        // 塩の確率（残り）
+        double pSalt = Math.Max(0, 1.0 - (pCaramel + pChoco + pRainbow));
+
+        // 平均倍率
+        double avgMultiplier = (pRainbow * 5.0) + (pChoco * 3.0) + (pCaramel * 2.0) + (pSalt * 1.0);
+
+        // 1タップの期待値 ＝ 1個のスコア × 1回の個数 × 平均倍率
+        return score * times * avgMultiplier;
+    }
+
+    /// <summary>
+    /// 自動マシンが全体で「1秒あたりに稼ぐスコア（CPS）」を計算
+    /// </summary>
+    double GetAutoMachineCPS()
+    {
+        double totalPopcornPerSecond = 0;
+
+        // 全マシンの1秒あたりポップコーン生成数を合計
+        for (int i = 0; i < autoMakerSettings.Length; i++)
+        {
+            var setting = autoMakerSettings[i];
+
+            // 0除算エラーと機数0のガード
+            if (setting.makerRecastTime > 0 && setting.makerCount > 0)
+            {
+                // 1機あたりの毎秒生成数 ＝ 1回の生成数 ÷ リキャスト時間
+                double popcornPerSecPerMachine = (double)setting.makerTimes / setting.makerRecastTime;
+
+                // 全機数の合計毎秒生成数を足し合わせる
+                totalPopcornPerSecond += popcornPerSecPerMachine * setting.makerCount;
+            }
+        }
+
+        // 各ポップコーンの平均期待値スコア（1個あたりの期待値）
+        double singlePopcornExpectedValue = GetClickEfficiency() / times;
+
+        // 全マシンの毎秒スコア ＝ 毎秒の合計ポップコーン数 × 1個の期待値スコア
+        return totalPopcornPerSecond * singlePopcornExpectedValue;
     }
 
     void Repeat()
@@ -319,6 +451,26 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    void CPS()
+    {
+        float currentTime = Time.time;
+
+        // 1. 今の時刻から「1秒以上前」の古いタイムスタンプを捨てる
+        while (clickTimestamps.Count > 0 && clickTimestamps.Peek() < currentTime - 1.0f)
+        {
+            clickTimestamps.Dequeue();
+        }
+
+        // 2. 残っているタイムスタンプの数が「現在1秒間の連打数（CPS）」
+        currentCPS = clickTimestamps.Count;
+
+        // 3. 最高記録（ハイスコア）の更新チェック
+        if (currentCPS > maxCPS)
+        {
+            maxCPS = currentCPS;
+        }
+    }
+
     public void OnClick()
     {
         if (!goFlag)
@@ -339,6 +491,7 @@ public class GameManager : MonoBehaviour
         repeatCount++;
         if (!repeatFlag) repeatFlag = true;
         else repeatTimer = 0;
+        clickTimestamps.Enqueue(Time.time);
         clickCount++;
     }
 
@@ -407,10 +560,12 @@ public class GameManager : MonoBehaviour
     /// <returns></returns>
     int Lottery()
     {
+        totalPopcornCount++;        
         if (UnityEngine.Random.Range(0, 100) < rainbowRate)
         {
             pAmount += (int)(score * repeatBonus * 5);
             currentUpScore = (int)(score * repeatBonus * 5);
+            totalPAmount += currentUpScore;
             rainbowCount++;
             return 4;
         }
@@ -419,6 +574,7 @@ public class GameManager : MonoBehaviour
         {
             pAmount += (int)(score * repeatBonus * 3);
             currentUpScore = (int)(score * repeatBonus * 3);
+            totalPAmount += currentUpScore;
             chocolateCount++;
             return 3;
         }
@@ -427,18 +583,20 @@ public class GameManager : MonoBehaviour
         {
             pAmount += (int)(score * repeatBonus * 2);
             currentUpScore = (int)(score * repeatBonus * 2);
+            totalPAmount += currentUpScore;
             caramelCount++;
             return 2;
         }
 
-        pAmount += (int)(score * repeatBonus);
         if (recordPAmount <= pAmount)
         {
             recordPAmount = pAmount;
             RankingManager.Instance.SendRecordPAmount();
         }
 
+        pAmount += (int)(score * repeatBonus);
         currentUpScore = (int)(score * repeatBonus);
+        totalPAmount += currentUpScore;
         regularCount++;
         return 1;
     }

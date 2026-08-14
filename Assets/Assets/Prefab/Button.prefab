@@ -693,7 +693,7 @@ GameObject:
   - component: {fileID: 143632809323613114}
   - component: {fileID: 7005323090986465463}
   m_Layer: 5
-  m_Name: Image
+  m_Name: MakerImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -905,7 +905,7 @@ GameObject:
   - component: {fileID: 6110595275711741282}
   - component: {fileID: 769534675433476029}
   m_Layer: 5
-  m_Name: Image (1)
+  m_Name: PopcornImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -29,7 +29,7 @@ public class Button : MonoBehaviour
     [SerializeField] Kind kind = Kind.Regular;                          // ポップコーンの種類     
     [SerializeField] bool lockFlag;         // 開放あるか
     [SerializeField] int lockPlayerLevel;   // 開放プレイヤーレベル
-    [SerializeField] long baseNeedAmount;    // 初期コスト
+    [SerializeField] long baseNeedAmount;   // 初期コスト
     [SerializeField] float costMultiplier;  // コスト増加率
     [SerializeField] int limitLevel;        // レベル上限
 
@@ -50,9 +50,10 @@ public class Button : MonoBehaviour
         {
             GameManager.Instance.UpdateMultiple += UpdateCostUI;
         }
-
+        // レベルとコストのテキストを更新
+        UpdateUI();
         if (limitFlag) Limit(); 
-        else UpdateCostUI(1);
+        else UpdateCostUI(0);
     }
 
     private void OnDisable()
@@ -68,7 +69,8 @@ public class Button : MonoBehaviour
     {
         InitVariable();
         SetUpData();
-    }
+        
+    }    
 
     void Update()
     {
@@ -77,6 +79,8 @@ public class Button : MonoBehaviour
             lockFlag = false;
             transform.GetChild(4).gameObject.SetActive(lockFlag);
         }
+
+        if (limitFlag) return;
         if (GameManager.Instance.pAmount >= needAmount) transform.GetComponent<Image>().color = Color.white;
         else transform.GetComponent<Image>().color = Color.gray;
     }
@@ -176,10 +180,7 @@ public class Button : MonoBehaviour
         }
 
         texts[0].text = name;
-        texts[4].text = name;
-
-        // レベルとコストのテキストを更新
-        UpdateUI();
+        texts[4].text = name;        
 
         // 開放があるか判定
         transform.GetChild(4).gameObject.SetActive(lockFlag);
@@ -198,6 +199,7 @@ public class Button : MonoBehaviour
                 int m = GameManager.Instance.multiple;
                 if (level + 1 * GameManager.Instance.multiple >= limitLevel) m = limitLevel - level;
                 level += m;
+                GameManager.Instance.currentTotalLimitLevel += m;
                 GameManager.Instance.pAmount -= needAmount;
                 UpdataUpgrade();
 
@@ -237,6 +239,7 @@ public class Button : MonoBehaviour
     // 上限時に実行
     void Limit()
     {
+        transform.GetComponent<Image>().color = Color.green;
         texts[1].text = $"Lv.MAX";
         texts[2].text = $"MAX";
         texts[3].text = $"";

@@ -26,8 +26,11 @@ public class BannerButtonManager : MonoBehaviour
         for (int i = 0; i < layers.Length; i++)
         {
             layers[i] = banner.transform.GetChild(i + 1).gameObject;
+            layers[i].SetActive(true);
             buttons[i] = transform.GetChild(i).GetComponent<RectTransform>();
         }
+        for (int i = 0; i < layers.Length; i++) layers[i].SetActive(false);
+        layers[0].SetActive(true);
         layerName.text = $"î•ñˆê——";
         flag = true;
     }
