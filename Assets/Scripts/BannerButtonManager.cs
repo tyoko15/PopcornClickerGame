@@ -1,35 +1,34 @@
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
 public class BannerButtonManager : MonoBehaviour
 {
-    [SerializeField] TextMeshProUGUI layerName;
-    [SerializeField] GameObject banner;
-    GameObject[] layers;
-    RectTransform[] buttons;
-    [SerializeField] Color selectColor;
-    [SerializeField] Color unSelectColor;
+    [SerializeField] TextMeshProUGUI layerName; // ボタンの名前テキスト
+    [SerializeField] GameObject banner;         // UI
+    GameObject[] layers;                        // 各UIレイヤー
+    RectTransform[] buttons;                    // ボタン
+    [SerializeField] Color selectColor;         // 選択中のカラー
+    [SerializeField] Color unSelectColor;       // 未選択のカラー
 
-    bool flag;
+    bool flag;  // UIのONOFF
 
-    // UIのOnOffに使用する変数
-    bool setFlag;
-    [SerializeField] float setTime = 10f;
-    float setTimer;
-
+    // UIのOnOff演出に使用する変数
+    bool setFlag;                           // ONOFF演出中フラグ
+    [SerializeField] float setTime;         // 演出時間
+    float setTimer;                         // 演出タイマー
 
     void Start()
     {
+        // レイヤーとボタンの初期化
         layers = new GameObject[banner.transform.childCount - 2];
         buttons = new RectTransform[transform.childCount];
+        // レイヤーとボタンの取得
         for (int i = 0; i < layers.Length; i++)
         {
             layers[i] = banner.transform.GetChild(i + 1).gameObject;
-            layers[i].SetActive(true);
+            layers[i].SetActive(false);
             buttons[i] = transform.GetChild(i).GetComponent<RectTransform>();
-        }
-        for (int i = 0; i < layers.Length; i++) layers[i].SetActive(false);
+        }        
         layers[0].SetActive(true);
         layerName.text = $"情報一覧";
         flag = true;
@@ -77,6 +76,10 @@ public class BannerButtonManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 切り替えボタン
+    /// </summary>
+    /// <param name="i"></param>
     public void ClickButton(int i)
     {
         // UIバナーの切り替え

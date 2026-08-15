@@ -3,19 +3,20 @@ using UnityEngine.UI;
 
 public class MultipleButtonManager : MonoBehaviour
 {
-    Image[] images = new Image[3];
-    int multiple = 1;
+    Image[] images = new Image[3];  // ボタンのイメージ
+    int multiple = 1;               // 倍数
+
     void Awake()
     {
+        // ボタンのイメージ初期化&取得
         images = new Image[transform.childCount - 1];
         for (int i = 0; i < images.Length; i++) images[i] = transform.GetChild(i).GetComponent<Image>();
     }
 
-    void Update()
-    {
-        
-    }
-
+    /// <summary>
+    /// 倍数ボタン
+    /// </summary>
+    /// <param name="i"></param>
     public void MultipleButton(int i)
     {
         if (i == 0) multiple = 1;

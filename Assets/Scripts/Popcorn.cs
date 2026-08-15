@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using TMPro;
+using UnityEngine.UI;
 
 public class Popcorn : MonoBehaviour
 {
@@ -11,7 +11,7 @@ public class Popcorn : MonoBehaviour
     [SerializeField] private float returnTime = 2.0f;
 
     private Rigidbody2D rb;
-    public int score;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -24,6 +24,16 @@ public class Popcorn : MonoBehaviour
         Invoke("ReturnPopcorn", returnTime);
     }
 
+    /// <summary>
+    /// ポップコーンのイラスト編集
+    /// </summary>
+    /// <param name="image"></param>
+    public void InitImage(Sprite image) => transform.GetComponent<SpriteRenderer>().sprite = image;
+
+
+    /// <summary>
+    /// 弾ける挙動関数
+    /// </summary>
     public void Pop()
     {
         // ① 上方向を中心に、左右ランダムな角度（斜め上）へ飛ばすベクトルを作成
@@ -41,6 +51,9 @@ public class Popcorn : MonoBehaviour
         rb.AddTorque(randomTorque);
     }
 
+    /// <summary>
+    /// リセット
+    /// </summary>
     void ReturnPopcorn()
     {
         PopcornPool.Instance.ReturnPopcorn(gameObject);

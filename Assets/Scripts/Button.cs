@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+// 強化ボタンの種類
 public enum UpgradeButton
 {
     None,
@@ -13,6 +14,7 @@ public enum UpgradeButton
     RainbowRate,
 }
 
+// 自動化ボタンの種類
 public enum AutoButton
 {
     None,
@@ -34,14 +36,13 @@ public class Button : MonoBehaviour
     [SerializeField] int limitLevel;        // レベル上限
 
     // 
-    GameManager gameManager;
-    int multiple;
-    double needAmount;
-    bool limitFlag;
-    int level = 1;
-    Image lockImage;
-    TextMeshProUGUI[] texts;
-    Image[] images;
+    int multiple;               // 現在の倍数
+    double needAmount;          // 強化に必要なコスト
+    bool limitFlag;             // 上限フラグ
+    int level = 1;              // 現在のレベル
+    Image lockImage;            // 制限イメージ
+    TextMeshProUGUI[] texts;    // ボタン内のテキスト
+    Image[] images;             // 自動マシン用イメージ
 
     private void OnEnable()
     {
@@ -52,6 +53,8 @@ public class Button : MonoBehaviour
         }
         // レベルとコストのテキストを更新
         UpdateUI();
+
+        // 上限で制御
         if (limitFlag) Limit(); 
         else UpdateCostUI(0);
     }
@@ -68,8 +71,7 @@ public class Button : MonoBehaviour
     void Awake()
     {
         InitVariable();
-        SetUpData();
-        
+        SetUpData();        
     }    
 
     void Update()
@@ -85,15 +87,20 @@ public class Button : MonoBehaviour
         else transform.GetComponent<Image>().color = Color.gray;
     }
     
-    // 変数の初期化
+    /// <summary>
+    /// 変数の初期化
+    /// </summary>
     void InitVariable()
     {
-        gameManager = GameManager.Instance;
+        // 初期コスト
         needAmount = baseNeedAmount;
 
+        // ボタン内のテキストの初期化&取得
         texts = new TextMeshProUGUI[6];            
         for (int i = 0; i < 4; i++) texts[i] = transform.GetChild(i).GetComponent<TextMeshProUGUI>();
         for (int i = 0; i < 2; i++) texts[i + 4] = transform.GetChild(4).GetChild(i).GetComponent<TextMeshProUGUI>();
+        
+        // 自動化ボタンのイメージ初期化&取得
         images = new Image[2];
         for (int i = 0; i < images.Length; i++)
         {
@@ -102,7 +109,9 @@ public class Button : MonoBehaviour
         }
     }
 
-    // 設定させたデータを元に初期化
+    /// <summary>
+    /// 設定させたデータを元に初期化
+    /// </summary>
     void SetUpData()
     {
         // upgradeButtonからNameを書き換える
@@ -132,6 +141,7 @@ public class Button : MonoBehaviour
                     break;
             }
         }
+        // autoButton
         else if (autoButton != AutoButton.None)
         {
             gameObject.name = $"{autoButton}Button";
@@ -187,13 +197,17 @@ public class Button : MonoBehaviour
         texts[5].text = $"PlayerLv.{lockPlayerLevel}";
     }
 
-    // クリック関数
+    /// <summary>
+    /// クリック関数
+    /// </summary>
     public void ClickButton()
     {
         if (!limitFlag && !lockFlag)
         {
+            // 現在のポップコーンスコアがコストに足りているか
             if (GameManager.Instance.pAmount >= needAmount)
             {
+                // 強化処理
                 AudioManager.Instance.PlayOneShotSE(1);
                 int l = level;
                 int m = GameManager.Instance.multiple;
@@ -203,12 +217,14 @@ public class Button : MonoBehaviour
                 GameManager.Instance.pAmount -= needAmount;
                 UpdataUpgrade();
 
+                //上限
                 if (limitLevel == level)
                 {
                     Limit();
                     return;
                 }
 
+                // 次のコストを計算
                 needAmount = CalculationNeedAmount();
             }
 
@@ -216,6 +232,10 @@ public class Button : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// テキスト更新
+    /// </summary>
+    /// <param name="m"></param>
     void UpdateCostUI(int m)
     {
         multiple = Mathf.Min(GameManager.Instance.multiple, limitLevel - level);
@@ -224,6 +244,10 @@ public class Button : MonoBehaviour
         else Limit();
     }
 
+    /// <summary>
+    /// コスト計算
+    /// </summary>
+    /// <returns></returns>
     double CalculationNeedAmount()
     {
         double need = 0;
@@ -236,7 +260,9 @@ public class Button : MonoBehaviour
         return need;
     }
 
-    // 上限時に実行
+    /// <summary>
+    /// 上限時に実行
+    /// </summary>
     void Limit()
     {
         transform.GetComponent<Image>().color = Color.green;
@@ -246,7 +272,9 @@ public class Button : MonoBehaviour
         limitFlag = true;
     }
 
-    // GameManagerを更新
+    /// <summary>
+    /// GameManagerを更新
+    /// </summary>
     void UpdataUpgrade()
     {
         int l = level;
@@ -294,7 +322,9 @@ public class Button : MonoBehaviour
 
     }
 
-    // Textを更新
+    /// <summary>
+    /// Textを更新
+    /// </summary>
     void UpdateUI()
     {
         texts[1].text = $"Lv.{level}\nMAX {limitLevel}";

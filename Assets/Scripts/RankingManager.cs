@@ -1,6 +1,9 @@
 using UnityEngine;
 using unityroom.Api;
 
+/// <summary>
+/// UnityRoom‘—M—p
+/// </summary>
 public class RankingManager : MonoBehaviour
 {
     public static RankingManager Instance;

@@ -783,135 +783,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 68430117}
   m_CullTransparentMesh: 1
---- !u!1 &71250365
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 71250366}
-  - component: {fileID: 71250367}
-  m_Layer: 0
-  m_Name: BGM (2)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &71250366
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 71250365}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 464973953}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!82 &71250367
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 71250365}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 3868543974737626905, guid: 7e84956b84d45d741b0a2d0e6707a79c, type: 2}
-  m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: 0142d323f49e4a848bf686540dc342de, type: 3}
-  m_PlayOnAwake: 0
-  m_Volume: 0.4
-  m_Pitch: 1.25
-  Loop: 1
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!1 &75829295
 GameObject:
   m_ObjectHideFlags: 0
@@ -953,6 +824,15 @@ MonoBehaviour:
   caramelRate: 20
   chocolateRate: 10
   rainbowRate: 1
+  mainMaker: {fileID: 2076046893}
+  makerSprites:
+  - {fileID: -4242455249001066966, guid: 56b41423aa2b41a48a8027b445a72f98, type: 3}
+  - {fileID: 3282982105154967326, guid: 4620a6b5aae78664e855597e984fc95c, type: 3}
+  - {fileID: -2132170630038067474, guid: 4b1092b946d7c1a48b25f8d578777f08, type: 3}
+  - {fileID: 3786202426903643945, guid: efc1a39b81e83384fa49913601e667cb, type: 3}
+  - {fileID: 6032643094343625259, guid: fc12cae615b858949874f4898c4a85c8, type: 3}
+  autoPopcornMakerPrefab: {fileID: 6042039491822003578, guid: e4ad5fa86a33e42428e67198476eec32, type: 3}
+  autoPopcornMakerGroup: {fileID: 794054616}
   autoMakerSettings:
   - kind: 0
     makerCount: 0
@@ -974,9 +854,6 @@ MonoBehaviour:
     makerCount: 0
     makerRecastTime: 300
     makerTimes: 1
-  mainMaker: {fileID: 2076046893}
-  autoPopcornMakerPrefab: {fileID: 6042039491822003578, guid: e4ad5fa86a33e42428e67198476eec32, type: 3}
-  autoPopcornMakes: {fileID: 794054616}
   points:
   - {fileID: 296850923}
   - {fileID: 1904520597}
@@ -995,12 +872,6 @@ MonoBehaviour:
   - {fileID: -557041589089568047, guid: 372b91079cf6b1e45b7cc1e4acd0cbd6, type: 3}
   popcornPrefab: {fileID: 9214812849994521946, guid: 0e46c85bf5a4a894dab7304bbaa4c5af, type: 3}
   popcornForceMultiple: 1
-  makerSprites:
-  - {fileID: -4242455249001066966, guid: 56b41423aa2b41a48a8027b445a72f98, type: 3}
-  - {fileID: 3282982105154967326, guid: 4620a6b5aae78664e855597e984fc95c, type: 3}
-  - {fileID: -2132170630038067474, guid: 4b1092b946d7c1a48b25f8d578777f08, type: 3}
-  - {fileID: 3786202426903643945, guid: efc1a39b81e83384fa49913601e667cb, type: 3}
-  - {fileID: 6032643094343625259, guid: fc12cae615b858949874f4898c4a85c8, type: 3}
   recordRepeatCount: 0
   baseLight: {fileID: 619394801}
   spotLight: {fileID: 985432382}
@@ -4790,7 +4661,6 @@ Transform:
   m_Children:
   - {fileID: 1704032921}
   - {fileID: 150530086}
-  - {fileID: 71250366}
   m_Father: {fileID: 1818109162}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!224 &474092942 stripped
@@ -9019,7 +8889,7 @@ GameObject:
   m_Component:
   - component: {fileID: 794054617}
   m_Layer: 0
-  m_Name: AutoPorcornMakers
+  m_Name: AutoPorcornMakerGroup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
