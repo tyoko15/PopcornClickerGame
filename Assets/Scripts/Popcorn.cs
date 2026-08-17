@@ -28,8 +28,11 @@ public class Popcorn : MonoBehaviour
     /// ポップコーンのイラスト編集
     /// </summary>
     /// <param name="image"></param>
-    public void InitImage(Sprite image) => transform.GetComponent<SpriteRenderer>().sprite = image;
-
+    public void InitImage(Sprite image, int layer)
+    {
+        transform.GetComponent<SpriteRenderer>().sprite = image;
+        transform.GetComponent<SpriteRenderer>().sortingOrder = layer;
+    }
 
     /// <summary>
     /// 弾ける挙動関数

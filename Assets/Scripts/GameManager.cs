@@ -71,7 +71,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI versionionText;        // バージョンテキスト
     [SerializeField] GameObject repeatUI;                   // 鬼連打のUI
     TextMeshProUGUI[] repeatTexts;                          // 鬼連打のテキスト
-    TextMeshProUGUI[] uiTexts = new TextMeshProUGUI[25];    // 情報一覧のテキスト
+    TextMeshProUGUI[] uiTexts = new TextMeshProUGUI[26];    // 情報一覧のテキスト
     TextMeshProUGUI[] recordTexts = new TextMeshProUGUI[5]; // 記録のテキスト
     [SerializeField] GameObject[] buttons;                  // 
     [HideInInspector] public int multiple = 1;              // 現在のボタン倍数
@@ -125,8 +125,7 @@ public class GameManager : MonoBehaviour
     float startTimer;       // スタート演出タイマー
 
     // 検証用オートクリッカー(本番では停止)
-    float autoTime = 0.01f; // 検証用連打秒数
-    float autoTimer;        // 検証用連打タイマー
+    [SerializeField] bool autoClickFlag;
 
     private void Awake()
     {        
@@ -137,7 +136,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         // 情報一覧テキストの初期化&取得
-        uiTexts = new TextMeshProUGUI[25];
+        uiTexts = new TextMeshProUGUI[26];
         for (int i = 0; i < uiTexts.Length; i++) uiTexts[i] = UI.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(0).GetChild(i + 1).GetComponent<TextMeshProUGUI>();
         // 記録テキストの初期化&取得
         recordTexts = new TextMeshProUGUI[UI.transform.GetChild(0).GetChild(4).GetChild(0).GetChild(0).GetChild(0).childCount];
@@ -174,14 +173,13 @@ public class GameManager : MonoBehaviour
         Repeat();       // 連打計測
         CPS();          // 連打速度計測
 
+        if (Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.C) && Input.GetKey(KeyCode.F)) autoClickFlag = true;
+        else if (Input.GetKey(KeyCode.F)) autoClickFlag = false;
+
         // 検証用クリッカー
         // 本番はOFF
-        //if (autoTimer > autoTime)
-        //{
-        //    autoTimer = 0;
-        //    OnClick();
-        //}
-        //else autoTimer += Time.deltaTime;
+        if (!autoClickFlag) return;
+        OnClick();
     }
 
     /// <summary>
@@ -195,6 +193,8 @@ public class GameManager : MonoBehaviour
             instructionText.color = Color.white;
             baseLight.intensity = 1f;
             spotLight.gameObject.SetActive(false);
+            spotLight.pointLightOuterAngle = 45f;
+            spotLight.pointLightOuterRadius = 10f; 
             startTimer = 0;
             startFlag = false;
         }
@@ -225,6 +225,7 @@ public class GameManager : MonoBehaviour
         uiTexts[u++].text = $"{ScoreFormatter.FormatToJapanese(recordPAmount)}p";                           // 最大ポップコーンスコア
         uiTexts[u++].text = $"{ScoreFormatter.FormatToJapanese(clickCount)}回";                             // 通算クリック数
         uiTexts[u++].text = $"{ScoreFormatter.FormatToJapanese(maxCPS)} 回/秒";                             // 瞬間クリック速度
+        uiTexts[u++].text = $"{ScoreFormatter.FormatToJapanese(currentCPS)} 回/秒";                           // 瞬間クリック速度
         uiTexts[u++].text = $"{hour.ToString("00")}:{minute.ToString("00")}:{second.ToString("00")}";       // プレイ時間
         // 効率
         uiTexts[u++].text = $"{ScoreFormatter.FormatToJapanese(CalculateClickExpectedValue())}p";           // 1クリックで稼げる平均スコア
@@ -279,10 +280,13 @@ public class GameManager : MonoBehaviour
     void Timer()
     {
         // カンスト対策
-        if (hour == 100) timerFlag = true;
-        hour = 99;
-        minute = 59;
-        second = 59;
+        if (hour == 100)
+        {
+            hour = 99;
+            minute = 59;
+            second = 59;
+            timerFlag = true;
+        }
         if (timerFlag) return;
 
         // タイマー
@@ -421,6 +425,8 @@ public class GameManager : MonoBehaviour
                 instructionText.color = Color.white;
                 baseLight.intensity = 1f;
                 spotLight.gameObject.SetActive(false);
+                spotLight.pointLightOuterAngle = 45f;
+                spotLight.pointLightOuterRadius = 10f; 
                 popcornForceMultiple = 1f;
                 repeatFlag = false;
             }
@@ -447,6 +453,8 @@ public class GameManager : MonoBehaviour
             RainbowColorText(repeatTexts[2], 0.5f, 0.25f);
             baseLight.intensity = 0.2f;
             spotLight.gameObject.SetActive(true);
+            spotLight.pointLightOuterAngle = Mathf.Max(times * 2.4f, 45f);
+            spotLight.pointLightOuterRadius = Mathf.Max(times * 0.3f, 10f); 
             popcornForceMultiple = 1 + (Mathf.FloorToInt((repeatCount - 100) / 180f)) * 0.2f;
 
             repeatBonus = 3f + 0.8f * ((repeatCount - 10) / 90);
@@ -509,6 +517,8 @@ public class GameManager : MonoBehaviour
             }
             RainbowColorText(instructionText, 1f, 0.1f); 
             RainbowColorText(repeatTexts[2], 1f, 0.1f);
+            spotLight.pointLightOuterAngle = Mathf.Max(times * 2.4f, 45f);
+            spotLight.pointLightOuterRadius = Mathf.Max(times * 0.3f, 10f); 
             popcornForceMultiple = 2f;
             repeatBonus = 11 + Mathf.FloorToInt((repeatCount - 1000) / 100) * 0.5f;
             nextBonusCount = 100 - (repeatCount - 1000) % 100;
@@ -533,7 +543,7 @@ public class GameManager : MonoBehaviour
             int kind = Lottery();                                                                       // ランダムでポップコーンの種類を決定
             Transform spawnPoint = mainMaker.transform.GetChild(0);                                     // ポップコーンの出現位置を指定
             GameObject p = PopcornPool.Instance.GetPopcorn(spawnPoint.position, spawnPoint.rotation);   // ポップコーンプールからポップコーンを生産
-            p.GetComponent<Popcorn>().InitImage(popcornSprites[kind - 1]);                              // ポップコーンのイラストを設定
+            p.GetComponent<Popcorn>().InitImage(popcornSprites[kind - 1], kind);                              // ポップコーンのイラストを設定
         }
 
         // 連打用
@@ -555,7 +565,7 @@ public class GameManager : MonoBehaviour
         if (kind == 0) kind = Lottery();                                                            // ランダムでポップコーンの種類を決定
         Transform spawnPoint = spawner.transform;                                                   // ポップコーンの出現位置を指定
         GameObject p = PopcornPool.Instance.GetPopcorn(spawnPoint.position, spawnPoint.rotation);   // ポップコーンプールからポップコーンを生産
-        p.GetComponent<Popcorn>().InitImage(popcornSprites[kind - 1]);                              // ポップコーンのイラストを設定                                              
+        p.GetComponent<Popcorn>().InitImage(popcornSprites[kind - 1], kind);                              // ポップコーンのイラストを設定                                              
     }
 
     /// <summary>

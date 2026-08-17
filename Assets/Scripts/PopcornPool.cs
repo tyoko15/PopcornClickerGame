@@ -15,11 +15,17 @@ public class PopcornPool : MonoBehaviour
     private GameObject[] pool;
     private int createdCount = 0; // 現在生成が完了している個数
     private int currentIndex = 0; // 次に使い回すオブジェクトのインデックス
+    int limitIndex;
+
+    [Header("完了までカウントダウン")]
+    [SerializeField] float second;
 
     void Awake()
     {
         Instance = this;
         pool = new GameObject[maxPoolSize];
+        limitIndex = 0;
+        second = Mathf.Max(0f, Mathf.CeilToInt((float)maxPoolSize / batchSize) * intervalSeconds);
     }
 
     void Start()
@@ -45,11 +51,13 @@ public class PopcornPool : MonoBehaviour
             }
 
             createdCount = targetCount; // 生成完了数を更新
+            limitIndex = targetCount;
 
             // 指定した秒数（0.1秒）だけ待って処理を一時中断（フレームを分散させてカクつき防止）
+            second -= intervalSeconds; 
             yield return new WaitForSeconds(intervalSeconds);
         }
-
+        second = 0f;
         //Debug.Log($"🍿 ポップコーンプール準備完了！（合計: {createdCount}個）");
     }
 
@@ -79,7 +87,7 @@ public class PopcornPool : MonoBehaviour
         obj.SetActive(true);
 
         // 次のインデックスへ進める（上限に達したら 0 に戻ってぐるぐる回る）
-        currentIndex = (currentIndex + 1) % maxPoolSize;
+        currentIndex = (currentIndex + 1) % limitIndex;
 
         return obj;
     }

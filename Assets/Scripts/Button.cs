@@ -125,7 +125,7 @@ public class Button : MonoBehaviour
                     name = $"プレイヤー\nレベルアップ";
                     break;
                 case UpgradeButton.ScoreUp:
-                    name = $"スコアアップ";
+                    name = $"基礎スコアアップ";
                     break;
                 case UpgradeButton.Times:
                     name = $"生産量アップ";
