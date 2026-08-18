@@ -194,7 +194,8 @@ public class GameManager : MonoBehaviour
             baseLight.intensity = 1f;
             spotLight.gameObject.SetActive(false);
             spotLight.pointLightOuterAngle = 45f;
-            spotLight.pointLightOuterRadius = 10f; 
+            spotLight.pointLightOuterRadius = 10f;
+            versionionText.gameObject.SetActive(false);
             startTimer = 0;
             startFlag = false;
         }
