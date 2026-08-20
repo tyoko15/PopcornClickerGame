@@ -124,6 +124,10 @@ public class GameManager : MonoBehaviour
     float startTime = 0.8f; // スタート演出時間
     float startTimer;       // スタート演出タイマー
 
+    // ゲームポーズ
+    public bool pauseFlag;
+    public int pauseTime;
+
     // 検証用オートクリッカー(本番では停止)
     [SerializeField] bool autoClickFlag;
 
@@ -190,7 +194,6 @@ public class GameManager : MonoBehaviour
         if (startTimer > startTime)     // ゲーム開始演出終了
         {
             for (int i = 0; i < UI.transform.childCount - 1; i++) UI.transform.GetChild(i).gameObject.SetActive(true);
-            instructionText.color = Color.white;
             baseLight.intensity = 1f;
             spotLight.gameObject.SetActive(false);
             spotLight.pointLightOuterAngle = 45f;
@@ -206,7 +209,6 @@ public class GameManager : MonoBehaviour
         else                            // 0秒から0.5秒内の内容
         {
             startTimer += Time.deltaTime;
-            instructionText.color = Color.black;
             Camera.main.orthographicSize = Mathf.Lerp(2f, 5f, startTimer / (startTime - 0.3f));
             Camera.main.transform.position = new Vector3(0f, Mathf.Lerp(-0.5f, 0f, startTimer / (startTime - 0.3f)), -5f);
             spotLight.gameObject.SetActive(true);
@@ -260,6 +262,12 @@ public class GameManager : MonoBehaviour
         recordTexts[u++].text = $"{ScoreFormatter.FormatToJapanese(chocolateCount)}個";      // チョコレート個数
         recordTexts[u++].text = $"{ScoreFormatter.FormatToJapanese(rainbowCount)}個";        // レインボー個数
         recordTexts[u++].text = $"{ScoreFormatter.FormatToJapanese(totalPopcornCount)}個";   // 総ポップコーン個数
+    }
+
+    public void Pause(bool flag)
+    {
+        pauseFlag = flag;
+        pauseTime = (!pauseFlag) ? 1 : 0;
     }
 
     /// <summary>
@@ -431,7 +439,7 @@ public class GameManager : MonoBehaviour
                 popcornForceMultiple = 1f;
                 repeatFlag = false;
             }
-            else repeatTimer += Time.deltaTime;
+            else repeatTimer += Time.deltaTime * GameManager.Instance.pauseTime;
         }
 
         // 100回未満の連打中

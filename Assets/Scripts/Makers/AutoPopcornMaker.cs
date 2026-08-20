@@ -26,7 +26,7 @@ public class AutoPopcornMaker : MonoBehaviour
         }
         else
         {
-            recastTimer += Time.deltaTime;
+            recastTimer += Time.deltaTime * GameManager.Instance.pauseTime;
             gauge.fillAmount = Mathf.InverseLerp(0f, recastTime, recastTimer);
         }
     }

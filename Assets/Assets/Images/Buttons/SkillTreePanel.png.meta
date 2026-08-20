@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: a6a186e043cda7e48be38686ba770203
+guid: 847c4e9e31d77804cbb7ebe4c0ffa8e5
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2632507359203233183
-    second: LockButton_0
+      213: 4561212418788033495
+    second: SkillTreePanel_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -47,13 +47,13 @@ TextureImporter:
   lightmap: 0
   compressionQuality: 50
   spriteMode: 2
-  spriteExtrude: 1
+  spriteExtrude: 0
   spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spriteGenerateFallbackPhysicsShape: 0
+  spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -139,23 +139,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: LockButton_0
+      name: SkillTreePanel_0
       rect:
         serializedVersion: 2
-        x: 26
-        y: 12
-        width: 620
-        height: 291
+        x: 16
+        y: 66
+        width: 686
+        height: 253
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 54, y: 98, z: 35, w: 62}
+      border: {x: 57, y: 64, z: 58, w: 91}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f9d09edde7b888420800000000000000
-      internalID: 2632507359203233183
+      spriteID: 7d306fe478eac4f30800000000000000
+      internalID: 4561212418788033495
       vertices: []
       indices: 
       edges: []
@@ -164,7 +164,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: a051fe3ff16251048a97a7b028bcacb5
+    spriteID: ac0058f506601c94dbdffd091e2525b4
     internalID: 0
     vertices: []
     indices: 
@@ -174,7 +174,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      LockButton_0: 2632507359203233183
+      SkillTreePanel_0: 4561212418788033495
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
