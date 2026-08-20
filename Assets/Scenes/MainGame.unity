@@ -16947,7 +16947,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -1898.5, y: 2123.5}
+  m_AnchoredPosition: {x: -2475.6387, y: 2484.1064}
   m_SizeDelta: {x: 5000, y: 5000}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &1324043149
@@ -19196,7 +19196,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1854922923}
   m_HandleRect: {fileID: 1854922922}
   m_Direction: 0
-  m_Value: 0.5
+  m_Value: 0.6519986
   m_Size: 0.2406
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -19458,6 +19458,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SkillTreeManager
   layer: {fileID: 1610696497}
+  viewport: {fileID: 1411798526}
+  content: {fileID: 1318697778}
 --- !u!1 &1558246468
 GameObject:
   m_ObjectHideFlags: 0
@@ -25224,7 +25226,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 865685896}
   m_HandleRect: {fileID: 865685895}
   m_Direction: 2
-  m_Value: 0.5
+  m_Value: 0.41509148
   m_Size: 0.1506
   m_NumberOfSteps: 0
   m_OnValueChanged:

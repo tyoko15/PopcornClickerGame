@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 [System.Serializable]
 public class SkillInfo
@@ -14,16 +15,25 @@ public class SkillTreeManager : MonoBehaviour
     public static SkillTreeManager Instance;
     [SerializeField] GameObject layer;
     TextMeshProUGUI[] infoTexts;
+
+    [SerializeField] RectTransform viewport;
+    [SerializeField] RectTransform content;
+
+    Vector2 viewportRect; // ScrollView‚ÌViewport
+    Vector2 contentRect;  // ScrollView‚ÌContent
     private void Awake()
     {
         Instance = this;
         infoTexts = new TextMeshProUGUI[3];
         for (int i = 0; i < infoTexts.Length; i++) infoTexts[i] = layer.transform.GetChild(1).GetChild(i).GetComponent<TextMeshProUGUI>();
+    
     }
 
     void Start()
     {
-        
+        viewportRect = viewport.sizeDelta;
+        contentRect = content.sizeDelta;
+        PickUpSkillPanel(Vector2.zero);
     }
 
     void Update()
@@ -31,10 +41,18 @@ public class SkillTreeManager : MonoBehaviour
         
     }
 
-    public void SetInfo(SkillInfo info)
+    public void SetInfo(SkillInfo info, Vector2 target)
     {
         infoTexts[0].text = info.skillName;
         infoTexts[1].text = $"{ScoreFormatter.FormatToJapanese(info.cost)}p";
         infoTexts[2].text = info.infoText;
+
+        PickUpSkillPanel(target);
+    }
+
+    void PickUpSkillPanel(Vector2 target)
+    {
+        Vector2 center = new Vector2(-(contentRect.x / 2) + (viewportRect.x / 2), (contentRect.y / 2) - (viewportRect.y / 2));
+        content.anchoredPosition = center - target;
     }
 }

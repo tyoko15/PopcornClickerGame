@@ -26,6 +26,6 @@ public class SkillPanel : MonoBehaviour
     public void ClickPanel(int i)
     {
         transform.GetComponent<Image>().color = selectColor;
-        SkillTreeManager.Instance.SetInfo(skillInfo);
+        SkillTreeManager.Instance.SetInfo(skillInfo, transform.GetComponent<RectTransform>().anchoredPosition);
     }
 }
