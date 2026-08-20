@@ -16,11 +16,16 @@ public class SkillTreeManager : MonoBehaviour
     [SerializeField] GameObject layer;
     TextMeshProUGUI[] infoTexts;
 
+    bool selectFlag;
+    [SerializeField] float selectTime;
+    float selectTimer;
     [SerializeField] RectTransform viewport;
     [SerializeField] RectTransform content;
-
+    Vector2 centerRect;
+    Vector2 targetRect;
     Vector2 viewportRect; // ScrollView‚ÌViewport
     Vector2 contentRect;  // ScrollView‚ÌContent
+    Vector2 currentContentRent;
     private void Awake()
     {
         Instance = this;
@@ -33,12 +38,12 @@ public class SkillTreeManager : MonoBehaviour
     {
         viewportRect = viewport.sizeDelta;
         contentRect = content.sizeDelta;
-        PickUpSkillPanel(Vector2.zero);
+        content.anchoredPosition = new Vector2(-(contentRect.x / 2) + (viewportRect.x / 2),(contentRect.y / 2) - (viewportRect.y / 2));
     }
 
     void Update()
     {
-        
+        if (selectFlag) PickUpSkillPanel();
     }
 
     public void SetInfo(SkillInfo info, Vector2 target)
@@ -46,13 +51,28 @@ public class SkillTreeManager : MonoBehaviour
         infoTexts[0].text = info.skillName;
         infoTexts[1].text = $"{ScoreFormatter.FormatToJapanese(info.cost)}p";
         infoTexts[2].text = info.infoText;
-
-        PickUpSkillPanel(target);
+        targetRect = target;
+        currentContentRent = content.anchoredPosition;
+        centerRect = new Vector2(-(contentRect.x / 2) + (viewportRect.x / 2), (contentRect.y / 2) - (viewportRect.y / 2));
+        selectFlag = true;
     }
 
-    void PickUpSkillPanel(Vector2 target)
+
+
+    void PickUpSkillPanel()
     {
-        Vector2 center = new Vector2(-(contentRect.x / 2) + (viewportRect.x / 2), (contentRect.y / 2) - (viewportRect.y / 2));
-        content.anchoredPosition = center - target;
+
+        if (selectTimer > selectTime)
+        {
+            content.anchoredPosition = centerRect;
+            selectFlag = false;
+            selectTimer = 0;
+        }
+        else
+        {
+            selectTimer += Time.deltaTime;
+            Vector2 center = new Vector2(Mathf.Lerp(currentContentRent.x, centerRect.x, selectTimer / selectTime), Mathf.Lerp(currentContentRent.y, centerRect.y, selectTimer / selectTime));
+            content.anchoredPosition = center;
+        }
     }
 }
