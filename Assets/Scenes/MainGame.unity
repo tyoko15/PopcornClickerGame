@@ -16935,14 +16935,14 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1406848134}
   m_Father: {fileID: 1594003684}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0.00024414062, y: -0.00079258287}
   m_SizeDelta: {x: 5000, y: 5000}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &1324043149
@@ -17616,11 +17616,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6053047395028744113, guid: 402d9596624197d4a982adc06a679d95, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 200
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 6053047395028744113, guid: 402d9596624197d4a982adc06a679d95, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 200
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 6053047395028744113, guid: 402d9596624197d4a982adc06a679d95, type: 3}
       propertyPath: m_LocalPosition.x
@@ -17670,6 +17670,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7811273140840639995, guid: 402d9596624197d4a982adc06a679d95, type: 3}
+      propertyPath: skillInfo.cost
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 7811273140840639995, guid: 402d9596624197d4a982adc06a679d95, type: 3}
+      propertyPath: skillInfo.infoText
+      value: "\u5F37\u5316\u3059\u308B\u3088"
+      objectReference: {fileID: 0}
+    - target: {fileID: 7811273140840639995, guid: 402d9596624197d4a982adc06a679d95, type: 3}
+      propertyPath: skillInfo.skillName
+      value: "\u5F37\u5316"
+      objectReference: {fileID: 0}
     - target: {fileID: 8912526961142755739, guid: 402d9596624197d4a982adc06a679d95, type: 3}
       propertyPath: m_Name
       value: Panel (0)
@@ -17696,6 +17708,7 @@ GameObject:
   - component: {fileID: 1411798529}
   - component: {fileID: 1411798528}
   - component: {fileID: 1411798527}
+  - component: {fileID: 1411798530}
   m_Layer: 5
   m_Name: Scroll View
   m_TagString: Untagged
@@ -17744,7 +17757,7 @@ MonoBehaviour:
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 10
+  m_ScrollSensitivity: 0
   m_Viewport: {fileID: 1594003684}
   m_HorizontalScrollbar: {fileID: 1552745429}
   m_VerticalScrollbar: {fileID: 1982633304}
@@ -17793,6 +17806,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1411798525}
   m_CullTransparentMesh: 1
+--- !u!114 &1411798530
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1411798525}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89e6ac74ede54344aa2ccec29bd43a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ScrollRectZoomAtMouse
+  content: {fileID: 1318697778}
+  viewport: {fileID: 1594003684}
+  zoomSpeed: 0.1
+  minScale: 0.5
+  maxScale: 3
 --- !u!224 &1424875802 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1026993744611426774, guid: 48368d0f00949b04eaa46bf4f213975d, type: 3}
@@ -19293,7 +19323,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1854922923}
   m_HandleRect: {fileID: 1854922922}
   m_Direction: 0
-  m_Value: 0
+  m_Value: -0.0000000642983
   m_Size: 0.2406
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -19555,6 +19585,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SkillTreeManager
   layer: {fileID: 1610696497}
+  skillPanelImages:
+  - {fileID: 2002518921294587092, guid: 1dd268e4e9c842246af28f534bc43f08, type: 3}
+  - {fileID: -6221335397833017573, guid: d67b719fae9e57e4e8cf37f1f2d4910c, type: 3}
+  - {fileID: 8516466925746661923, guid: 4c62c133916acb944a72a69e85f4900e, type: 3}
+  - {fileID: 2674285052011536712, guid: 1c2f493637ed4744abc4265b380487e0, type: 3}
+  selectColor: {r: 0.77254903, g: 0.9882353, b: 0.76862746, a: 1}
   selectTime: 0.05
   viewport: {fileID: 1411798526}
   content: {fileID: 1318697778}
@@ -25324,7 +25360,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 865685896}
   m_HandleRect: {fileID: 865685895}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 1.0000002
   m_Size: 0.1506
   m_NumberOfSteps: 0
   m_OnValueChanged:

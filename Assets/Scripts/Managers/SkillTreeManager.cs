@@ -2,10 +2,20 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+
+public enum PanelType
+{
+    Reinforcement,
+    Lv1,
+    Lv2,
+    Lv3,
+}
+
 [System.Serializable]
 public class SkillInfo
 {
     public string skillName;
+    public PanelType panelType;
     public int cost;
     public string infoText;
 }
@@ -16,6 +26,9 @@ public class SkillTreeManager : MonoBehaviour
     [SerializeField] GameObject layer;
     TextMeshProUGUI[] infoTexts;
 
+    public Sprite[] skillPanelImages;
+
+    public Color selectColor;
     bool selectFlag;
     [SerializeField] float selectTime;
     float selectTimer;

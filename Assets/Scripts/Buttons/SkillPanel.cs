@@ -5,11 +5,8 @@ using UnityEngine.UI;
 public class SkillPanel : MonoBehaviour
 {
     public SkillInfo skillInfo;
-    TextMeshProUGUI nameText;
-    [SerializeField] Color selectColor;
     void Start()
     {
-        nameText = transform.GetChild(0).GetComponent<TextMeshProUGUI>();
         InitVariable();
     }
 
@@ -20,12 +17,12 @@ public class SkillPanel : MonoBehaviour
 
     void InitVariable()
     {
-        nameText.text = skillInfo.skillName;
+        transform.GetChild(0).GetComponent<Image>().sprite = SkillTreeManager.Instance.skillPanelImages[(int)skillInfo.panelType];
     }
 
     public void ClickPanel(int i)
     {
-        transform.GetComponent<Image>().color = selectColor;
+        transform.GetChild(0).GetComponent<Image>().color = SkillTreeManager.Instance.selectColor;
         SkillTreeManager.Instance.SetInfo(skillInfo, transform.GetComponent<RectTransform>().anchoredPosition);
     }
 }
