@@ -17675,8 +17675,16 @@ PrefabInstance:
       value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 7811273140840639995, guid: 402d9596624197d4a982adc06a679d95, type: 3}
+      propertyPath: skillPanelData
+      value: 
+      objectReference: {fileID: 11400000, guid: 1fa6cd6da1373ce4f819ef4f1887a915, type: 2}
+    - target: {fileID: 7811273140840639995, guid: 402d9596624197d4a982adc06a679d95, type: 3}
       propertyPath: skillInfo.infoText
       value: "\u5F37\u5316\u3059\u308B\u3088"
+      objectReference: {fileID: 0}
+    - target: {fileID: 7811273140840639995, guid: 402d9596624197d4a982adc06a679d95, type: 3}
+      propertyPath: skillInfo.panelType
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7811273140840639995, guid: 402d9596624197d4a982adc06a679d95, type: 3}
       propertyPath: skillInfo.skillName
@@ -19590,6 +19598,7 @@ MonoBehaviour:
   - {fileID: -6221335397833017573, guid: d67b719fae9e57e4e8cf37f1f2d4910c, type: 3}
   - {fileID: 8516466925746661923, guid: 4c62c133916acb944a72a69e85f4900e, type: 3}
   - {fileID: 2674285052011536712, guid: 1c2f493637ed4744abc4265b380487e0, type: 3}
+  lockColor: {r: 0.28930807, g: 0.28930807, b: 0.28930807, a: 1}
   selectColor: {r: 0.77254903, g: 0.9882353, b: 0.76862746, a: 1}
   selectTime: 0.05
   viewport: {fileID: 1411798526}

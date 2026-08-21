@@ -21,20 +21,9 @@ public class ScrollRectCenterZoom : MonoBehaviour
 
         if (currentScale < minScale) currentScale = minScale;
         if (currentScale > maxScale) currentScale = maxScale;
-        //// マウスがViewport（表示範囲）の上にある時だけズームを許可する場合
-        //if (viewport != null && !RectTransformUtility.RectangleContainsScreenPoint(viewport, Input.mousePosition))
-        //{
-        //    return;
-        //}
 
-        //// 1. 現在のスケールを取得
-        //float currentScale = content.localScale.x;
-
-        //// 2. 新しいスケールを範囲内（minScale ～ maxScale）で計算
-        //float targetScale = Mathf.Clamp(currentScale + (scroll * zoomSpeed), minScale, maxScale);
-
-        // 3. 中心軸でスケールを適用
-        //content.localScale = new Vector3(targetScale, targetScale, 1f);
         content.localScale = new Vector3(currentScale, currentScale, 1f);
+
+        SkillTreeManager.Instance.ResetPosition();
     }
 }
