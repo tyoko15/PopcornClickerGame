@@ -1,6 +1,4 @@
-using System.Threading;
 using TMPro;
-using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,32 +7,30 @@ using UnityEngine.UI;
 スキルは、共通して一定時間効果を発動して効果終了後
 リキャストタイムがある。
 
-1. 生産固定
+1. 生産固定化
 FixedPopcorn
-クリック時生産されるポップコーンが固定される。
+クリックで生産されるポップコーンが()になる。
 2. 生産量アップ
 TimesUp
-クリック時生産量が倍になる。
+生産量が()倍になる。
 3. スコア倍率アップ
 BonusUp
-生産されたポップコーンのスコアに倍率が乗る。
-4. クリックに合わせた倍数アップ
-RepeatBonus
-連打数に合わせた倍率が現在のポップコーンのスコアにかかる。
+生産された全ポップコーンのスコアが()倍になる。
+4. マシンの分身
+MakerOffshoot
+稼働中の全マシンの()倍の数になる。
 5. マシン稼働速度アップ
 MakerSpeedUp
-全稼働中のマシンの生産時間を％短縮。
+稼働中の全マシンの生産時間を()%短縮。
 6. マシン生産量アップ
 MakerTimesUp
-全稼働中のマシンの生産量が倍になる。
+稼働中の全マシンの生産量が()倍になる。
 7. クリティカル
 Critical
-クリック時確率で生産させたポップコーンのスコアに倍率が乗る。
+クリックで生産されたポップコーンに()%で5倍になる。
 8. フィーバー
 Fever
-フィーバータイム内に生産されたポップコーンのスコアの倍を計上する。
-9. 
-
+フィーバータイム内に生産された全ポップコーンスコアの()倍をスキル終了後に得る。
 */
 public enum SkillType
 {
@@ -42,7 +38,7 @@ public enum SkillType
     FixedPopcorn,
     TimesUp,
     BonusUp,
-    RepeatBonus,
+    MakerOffshoot,
     MakerSpeedUp,
     MakerTimesUp,
     Critical,
@@ -51,10 +47,16 @@ public enum SkillType
 
 public enum PanelType
 {
-    Reinforcement,
     Lv1,
     Lv2,
     Lv3,
+    Reinforcement,
+}
+
+public enum Reinforcement
+{
+    EffectTime,
+    RecastTime
 }
 
 [System.Serializable]
@@ -73,33 +75,46 @@ public class SkillTreeManager : MonoBehaviour
     TextMeshProUGUI[] infoTexts;
 
     public Sprite[] skillPanelImages;
+    public Color[] lineColors;
 
-    public Color lockColor;
-    public Color selectColor;
+    // 選択
     bool selectFlag;
+    public Color lockColor;
+    [SerializeField] Image selectImage;
     [SerializeField] float selectTime;
     float selectTimer;
     [SerializeField] RectTransform viewport;
     [SerializeField] RectTransform content;
-    Vector2 centerRect;
-    Vector2 targetRect;
-    Vector2 viewportRect; // ScrollViewのViewport
-    Vector2 contentRect;  // ScrollViewのContent
-    Vector2 currentContentRent;
+    Vector2 targetRect;         // 選択されたスキルパネルの位置
+    Vector2 viewportSize;       // Viewportのサイズ
+    Vector2 contentSize;        // Contentのサイズ
+    Vector2 currentContentRect; // 現在のContentの位置
+
+    // SkillPanel
+    PanelLine[] panelLines;
+    SkillPanel[] skillPanels;
+    PanelLine selectPanelLine;
+    SkillPanel selectSkillPanel;
+    Image acquisitionButton;
 
     private void Awake()
     {
         Instance = this;
         infoTexts = new TextMeshProUGUI[3];
         for (int i = 0; i < infoTexts.Length; i++) infoTexts[i] = layer.transform.GetChild(1).GetChild(i).GetComponent<TextMeshProUGUI>();
-    
+        selectImage.gameObject.SetActive(false);
+        panelLines = new PanelLine[8];
+        for (int i = 0; i < panelLines.Length; i++) panelLines[i] = layer.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(i).GetComponent<PanelLine>();        
+        skillPanels = new SkillPanel[15 * 8];
+        for (int i = 0; i < 8; i++) for (int j = 0; j < 15; j++) skillPanels[i * 15 + j] = layer.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(i).GetChild(1).GetChild(j).GetComponent<SkillPanel>();
+        acquisitionButton = layer.transform.GetChild(1).GetChild(4).GetComponent<Image>();
     }
 
     void Start()
     {
-        viewportRect = viewport.sizeDelta;
-        contentRect = content.sizeDelta;
-        content.anchoredPosition = new Vector2(-(contentRect.x * content.localScale.x / 2) + (viewportRect.x / 2),(contentRect.y * content.localScale.y / 2) - (viewportRect.y / 2));
+        viewportSize = viewport.sizeDelta;
+        contentSize = content.sizeDelta;
+        content.anchoredPosition = new Vector2(-(contentSize.x * content.localScale.x / 2) + (viewportSize.x / 2),(contentSize.y * content.localScale.y / 2) - (viewportSize.y / 2));
     }
 
     void Update()
@@ -107,11 +122,12 @@ public class SkillTreeManager : MonoBehaviour
         if (selectFlag) PickUpSkillPanel();
     }
 
-    public void SetInfo(SkillInfo info, Vector2 target)
+    public void SetInfo(SkillPanel panel, Vector2 target)
     {
+        SkillPanelData data = panel.data;
         // 名前を代入
         string name = $"";
-        switch (info.skillType)
+        switch (data.skillType)
         {
             case SkillType.FixedPopcorn:
                 name = $"生産固定化";
@@ -122,14 +138,14 @@ public class SkillTreeManager : MonoBehaviour
             case SkillType.BonusUp:
                 name = $"スコア倍率アップ";
                 break;
-            case SkillType.RepeatBonus:
-                name = $"クリックに合わせた倍数アップ";
+            case SkillType.MakerOffshoot:
+                name = $"マシン数アップ";
                 break;
             case SkillType.MakerSpeedUp:
-                name = $"マシン稼働速度アップ";
+                name = $"マシン生産速度\nアップ";
                 break;
             case SkillType.MakerTimesUp:
-                name = $"マシン生産量アップ";
+                name = $"マシン生産量\nアップ";
                 break;
             case SkillType.Critical:
                 name = $"クリティカル";
@@ -138,13 +154,30 @@ public class SkillTreeManager : MonoBehaviour
                 name = $"フィーバー";
                 break;
         }
-
+        
+        for (int i = 0; i < panelLines.Length; i++)
+        {
+            for (int j = 0; j < panelLines[i].skillPanels.Length; j++)
+            {
+                if (panelLines[i].skillPanels[j] == panel)
+                {
+                    selectPanelLine = panelLines[i];
+                }
+            }
+        }
+        
+        selectSkillPanel = panel;
+        acquisitionButton.color = (selectSkillPanel.lockFlag) ? lockColor : Color.white;
+        layer.transform.GetChild(1).GetChild(4).GetChild(0).GetComponent<TextMeshProUGUI>().color = (selectSkillPanel.lockFlag) ? lockColor : Color.white;
+        
         infoTexts[0].text = name;
-        infoTexts[1].text = $"{ScoreFormatter.FormatToJapanese(info.cost)}p";
-        infoTexts[2].text = info.infoText;
-        targetRect = target;
-        currentContentRent = content.anchoredPosition;
-        centerRect = new Vector2(-(contentRect.x * content.localScale.x / 2) + (viewportRect.x / 2), (contentRect.y * content.localScale.y / 2) - (viewportRect.y / 2));
+        infoTexts[1].text = $"{ScoreFormatter.FormatToJapanese(data.cost)}p";
+        infoTexts[2].text = data.infoText;
+        targetRect = new Vector2(-contentSize.x * content.localScale.x / 2 + viewport.anchoredPosition.x - target.x * content.localScale.x,
+                                  contentSize.y * content.localScale.y / 2 - viewport.anchoredPosition.y - target.y * content.localScale.y);
+        currentContentRect = content.anchoredPosition;
+        selectImage.gameObject.SetActive(true);
+        selectImage.GetComponent<RectTransform>().anchoredPosition = new Vector2(target.x - 60f, target.y + 60f);
         selectFlag = true;
     }
 
@@ -152,22 +185,30 @@ public class SkillTreeManager : MonoBehaviour
 
     void PickUpSkillPanel()
     {
-
         if (selectTimer > selectTime)
         {
-            content.anchoredPosition = centerRect;
+            content.anchoredPosition = targetRect;
             selectFlag = false;
             selectTimer = 0;
         }
         else
         {
             selectTimer += Time.deltaTime;
-            Vector2 center = new Vector2(Mathf.Lerp(currentContentRent.x, centerRect.x, selectTimer / selectTime), Mathf.Lerp(currentContentRent.y, centerRect.y, selectTimer / selectTime));
+            Vector2 center = new Vector2(Mathf.Lerp(currentContentRect.x, targetRect.x, selectTimer / selectTime), Mathf.Lerp(currentContentRect.y, targetRect.y, selectTimer / selectTime));
             content.anchoredPosition = center;
         }
     }
     public void ResetPosition()
     {
-        content.anchoredPosition = new Vector2(-(contentRect.x * content.localScale.x / 2) + (viewportRect.x / 2), (contentRect.y * content.localScale.y / 2) - (viewportRect.y / 2));
+        content.anchoredPosition = new Vector2(-(contentSize.x * content.localScale.x / 2) + (viewportSize.x / 2), (contentSize.y * content.localScale.y / 2) - (viewportSize.y / 2));
+    }
+
+    ///
+    public void ClickAcquisitionButton()
+    {
+        if (!selectSkillPanel.lockFlag)
+        {
+
+        }
     }
 }

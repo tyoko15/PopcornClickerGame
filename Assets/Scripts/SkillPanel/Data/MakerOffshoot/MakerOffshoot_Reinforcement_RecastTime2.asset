@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb2761a5dfef3954194e9c2324895d09, type: 3}
+  m_Name: MakerOffshoot_Reinforcement_RecastTime2
+  m_EditorClassIdentifier: Assembly-CSharp::SkillPanelData
+  skillType: 4
+  panelType: 3
+  reinforcementType: 1
+  level: 2
+  cost: 1500000
+  infoText: "\u518D\u4F7F\u7528\u307E\u3067\u306E\u6642\u9593\u3092\n4\u79D2\u77ED\u7E2E\u3059\u308B\u3002"
+  effectTime: 0
+  recastTime: 4

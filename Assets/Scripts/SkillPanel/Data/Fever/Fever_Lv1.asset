@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb2761a5dfef3954194e9c2324895d09, type: 3}
+  m_Name: Fever_Lv1
+  m_EditorClassIdentifier: Assembly-CSharp::SkillPanelData
+  skillType: 8
+  panelType: 0
+  reinforcementType: 0
+  level: 0
+  cost: 10000
+  infoText: "\u30D5\u30A3\u30FC\u30D0\u30FC\u5185\u306B\u751F\u7523\u3055\u308C\u305F\\n\u5168\u30DD\u30C3\u30D7\u30B3\u30FC\u30F3\u30B9\u30B3\u30A2\u306E\\n2\u500D\u3092\u30B9\u30AD\u30EB\u7D42\u4E86\u5F8C\u306B\u7372\u5F97\u3002\n"
+  effectTime: 5
+  recastTime: 60
