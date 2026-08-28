@@ -58,11 +58,18 @@ public class UILine : MaskableGraphic
 
     public void SetLineColor()
     {
-        if (endPanel == null) 
+        if (endTarget == null)
         {
             color = SkillTreeManager.Instance.lineColors[0];
-            return;            
+            return;
         }
+
+        if (startPanel == null && endPanel == null)
+        {
+            startPanel = startTarget.gameObject.GetComponent<SkillPanel>();
+            endPanel = endTarget.gameObject.GetComponent<SkillPanel>();
+        }
+
         if (startPanel.state == PanelState.Acquired && endPanel.state == PanelState.UnLock)
         {
             color = SkillTreeManager.Instance.lineColors[1];

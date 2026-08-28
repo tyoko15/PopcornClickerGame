@@ -50,4 +50,59 @@ public class PanelLine : MonoBehaviour
     {
         for (int i = 0; i < lines.Length; i++) lines[i].SetLineColor();
     }
+
+    public void UpdatePanelLineState(SkillPanel panel)
+    {
+        int number = 0;
+        for (int i = 0; i < skillPanels.Length; i++) if (panel == skillPanels[i]) number = i;
+        // ŽŸ‚Ìƒpƒlƒ‹‚Ì‰ðœ‚·‚é
+        switch (number) 
+        {
+            case 0:
+                skillPanels[1].state = PanelState.UnLock;
+                skillPanels[3].state = PanelState.UnLock;
+                break;
+            case 1:
+                skillPanels[2].state = PanelState.UnLock;
+                break;
+            case 2:
+            case 4:
+                skillPanels[5].state = PanelState.UnLock;
+                break;
+            case 3:
+                skillPanels[4].state = PanelState.UnLock;
+                break;
+            case 5:
+                skillPanels[6].state = PanelState.UnLock;
+                skillPanels[8].state = PanelState.UnLock;
+                break;
+            case 6:
+                skillPanels[7].state = PanelState.UnLock;
+                break;
+            case 7:
+            case 9:
+                skillPanels[10].state = PanelState.UnLock;
+                break;
+            case 8:
+                skillPanels[9].state = PanelState.UnLock;
+                break;
+            case 10:
+                skillPanels[11].state = PanelState.UnLock;
+                skillPanels[13].state = PanelState.UnLock;                
+                break;
+            case 11:
+                skillPanels[12].state = PanelState.UnLock;
+                break;
+            case 12:
+                break;
+            case 13:
+                skillPanels[14].state = PanelState.UnLock;
+                break;
+            case 14:
+                break;
+        }
+
+        for (int i = 0; i < skillPanels.Length; i++) skillPanels[i].Lock();
+        SetLineColor();
+    }
 }

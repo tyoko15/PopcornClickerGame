@@ -11,7 +11,6 @@ public enum PanelState
 public class SkillPanel : MonoBehaviour
 {
     public SkillPanelData data;
-    public bool lockFlag;
     public PanelState state;
     Image[] images;
 
@@ -21,19 +20,14 @@ public class SkillPanel : MonoBehaviour
         images = new Image[transform.childCount];
         for (int i = 0; i < images.Length; i++) images[i] = transform.GetChild(i).GetComponent<Image>();
         images[0].sprite = SkillTreeManager.Instance.skillPanelImages[(int)data.panelType];
-        if (data.panelType == PanelType.Lv1)
-        {
-            state = PanelState.UnLock;
-            lockFlag = false;
-        }
-        else lockFlag = true;
-        Lock(lockFlag);
+        if (data.panelType == PanelType.Lv1) state = PanelState.UnLock;
+        else state = PanelState.Lock;
+        Lock();
     }
 
-    public void Lock(bool flag)
+    public void Lock()
     {
-        lockFlag = flag;
-        images[0].color = (!lockFlag) ? Color.white : SkillTreeManager.Instance.lockColor;
+        images[0].color = (state == PanelState.Lock) ? SkillTreeManager.Instance.panelColors[0] : Color.white;
     }
 
     public void ClickPanel()

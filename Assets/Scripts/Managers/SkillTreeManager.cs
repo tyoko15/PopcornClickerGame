@@ -79,7 +79,7 @@ public class SkillTreeManager : MonoBehaviour
 
     // ëIë
     bool selectFlag;
-    public Color lockColor;
+    public Color[] panelColors;
     [SerializeField] Image selectImage;
     [SerializeField] float selectTime;
     float selectTimer;
@@ -96,18 +96,20 @@ public class SkillTreeManager : MonoBehaviour
     PanelLine selectPanelLine;
     SkillPanel selectSkillPanel;
     Image acquisitionButton;
+    TextMeshProUGUI acquisitionText;
 
     private void Awake()
     {
         Instance = this;
-        infoTexts = new TextMeshProUGUI[3];
+        infoTexts = new TextMeshProUGUI[4];
         for (int i = 0; i < infoTexts.Length; i++) infoTexts[i] = layer.transform.GetChild(1).GetChild(i).GetComponent<TextMeshProUGUI>();
         selectImage.gameObject.SetActive(false);
         panelLines = new PanelLine[8];
         for (int i = 0; i < panelLines.Length; i++) panelLines[i] = layer.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(i).GetComponent<PanelLine>();        
         skillPanels = new SkillPanel[15 * 8];
         for (int i = 0; i < 8; i++) for (int j = 0; j < 15; j++) skillPanels[i * 15 + j] = layer.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(i).GetChild(1).GetChild(j).GetComponent<SkillPanel>();
-        acquisitionButton = layer.transform.GetChild(1).GetChild(4).GetComponent<Image>();
+        acquisitionButton = layer.transform.GetChild(1).GetChild(5).GetComponent<Image>();
+        acquisitionText = layer.transform.GetChild(1).GetChild(5).GetChild(0).GetComponent<TextMeshProUGUI>();
     }
 
     void Start()
@@ -115,6 +117,11 @@ public class SkillTreeManager : MonoBehaviour
         viewportSize = viewport.sizeDelta;
         contentSize = content.sizeDelta;
         content.anchoredPosition = new Vector2(-(contentSize.x * content.localScale.x / 2) + (viewportSize.x / 2),(contentSize.y * content.localScale.y / 2) - (viewportSize.y / 2));
+
+        infoTexts[0].text = $"ÉXÉLÉãñº";
+        infoTexts[1].text = $"";
+        infoTexts[2].text = $"";
+        infoTexts[3].text = $"";
     }
 
     void Update()
@@ -167,12 +174,14 @@ public class SkillTreeManager : MonoBehaviour
         }
         
         selectSkillPanel = panel;
-        acquisitionButton.color = (selectSkillPanel.lockFlag) ? lockColor : Color.white;
-        layer.transform.GetChild(1).GetChild(4).GetChild(0).GetComponent<TextMeshProUGUI>().color = (selectSkillPanel.lockFlag) ? lockColor : Color.white;
-        
+        acquisitionButton.color = (selectSkillPanel.state == PanelState.Lock) ? panelColors[0] : Color.white;
+        acquisitionText.color = (selectSkillPanel.state == PanelState.Lock) ? panelColors[0] : (selectSkillPanel.state == PanelState.UnLock) ? Color.white : panelColors[1];
+        acquisitionText.text = (selectSkillPanel.state == PanelState.Lock) ? $"ñ¢äJï˙" : (selectSkillPanel.state == PanelState.UnLock) ? $"älìæ" : $"älìæçœ";
+
         infoTexts[0].text = name;
         infoTexts[1].text = $"{ScoreFormatter.FormatToJapanese(data.cost)}p";
-        infoTexts[2].text = data.infoText;
+        infoTexts[2].text = $"{ScoreFormatter.FormatToJapanese(GameManager.Instance.pAmount)}p";
+        infoTexts[3].text = data.infoText;
         targetRect = new Vector2(-contentSize.x * content.localScale.x / 2 + viewport.anchoredPosition.x - target.x * content.localScale.x,
                                   contentSize.y * content.localScale.y / 2 - viewport.anchoredPosition.y - target.y * content.localScale.y);
         currentContentRect = content.anchoredPosition;
@@ -206,9 +215,14 @@ public class SkillTreeManager : MonoBehaviour
     ///
     public void ClickAcquisitionButton()
     {
-        if (!selectSkillPanel.lockFlag)
+        if (selectSkillPanel.state == PanelState.UnLock)
         {
-
+            if (selectSkillPanel.data.cost <= GameManager.Instance.pAmount)
+            {
+                GameManager.Instance.pAmount -= selectSkillPanel.data.cost;
+                selectSkillPanel.state = PanelState.Acquired;
+                selectPanelLine.UpdatePanelLineState(selectSkillPanel);
+            }
         }
     }
 }

@@ -19,8 +19,10 @@ public class ScrollRectCenterZoom : MonoBehaviour
         if (scroll == 1) currentScale += zoomSpeed;
         else if (scroll == -1) currentScale -= zoomSpeed;
 
+
         if (currentScale < minScale) currentScale = minScale;
         if (currentScale > maxScale) currentScale = maxScale;
+        if (currentScale == minScale || currentScale == maxScale) return;
 
         content.localScale = new Vector3(currentScale, currentScale, 1f);
 
