@@ -1,78 +1,34 @@
-ï»¿using System.IO;
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(SkillPanelData))]
-public class SkillPanelDataEditor : Editor
+[CustomEditor(typeof(SkillData))]
+public class SkillDataEditor : Editor
 {
     private SerializedProperty skillTypeProp;
-    private SerializedProperty panelTypeProp;
-    private SerializedProperty reinforcementTypeProp;
-    private SerializedProperty levelProp;
     private SerializedProperty effectTimeProp;
     private SerializedProperty recastTimeProp;
-    private SerializedProperty costProp;
-    private SerializedProperty infoTextProp;
 
     private void OnEnable()
     {
         skillTypeProp = serializedObject.FindProperty("skillType");
-        panelTypeProp = serializedObject.FindProperty("panelType");
-        reinforcementTypeProp = serializedObject.FindProperty("reinforcementType");
-        levelProp = serializedObject.FindProperty("level");
         effectTimeProp = serializedObject.FindProperty("effectTime");
         recastTimeProp = serializedObject.FindProperty("recastTime");
-        costProp = serializedObject.FindProperty("cost");
-        infoTextProp = serializedObject.FindProperty("infoText");
     }
 
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
-        SkillPanelData data = (SkillPanelData)target;
+        SkillData data = (SkillData)target;
 
-        EditorGUILayout.LabelField("åŸºæœ¬è¨­å®š", EditorStyles.boldLabel);
+        EditorGUILayout.LabelField("ƒXƒLƒ‹İ’è", EditorStyles.boldLabel);
         EditorGUILayout.PropertyField(skillTypeProp);
-        EditorGUILayout.PropertyField(panelTypeProp);
 
-        // ãƒ‘ãƒãƒ«ã‚¿ã‚¤ãƒ—ãŒ Reinforcement ã®å ´åˆ
-        if (panelTypeProp.enumValueIndex == (int)PanelType.Reinforcement)
-        {
-            EditorGUI.indentLevel++;
-            EditorGUILayout.PropertyField(levelProp);
-            EditorGUILayout.PropertyField(reinforcementTypeProp);
-            EditorGUI.indentLevel--;
+        EditorGUILayout.LabelField("Šî–{İ’è", EditorStyles.boldLabel);
+        EditorGUILayout.PropertyField(effectTimeProp);
+        EditorGUILayout.PropertyField(recastTimeProp);
 
-            EditorGUILayout.PropertyField(costProp);
-
-            Reinforcement currentReinforcement = (Reinforcement)reinforcementTypeProp.enumValueIndex;
-            EditorGUILayout.LabelField("å¼·åŒ–ã•ã‚Œã‚‹å†…å®¹", EditorStyles.boldLabel);
-
-            if (currentReinforcement == Reinforcement.EffectTime)
-            {
-                EditorGUILayout.PropertyField(effectTimeProp);                
-                data.infoText = $"åŠ¹æœæ™‚é–“ã‚’{data.effectTime}ç§’å»¶é•·ã™ã‚‹ã€‚";
-            }
-            else if (currentReinforcement == Reinforcement.RecastTime)
-            {
-                EditorGUILayout.PropertyField(recastTimeProp);
-                data.infoText = $"å†ä½¿ç”¨ã¾ã§ã®æ™‚é–“ã‚’\n{data.recastTime}ç§’çŸ­ç¸®ã™ã‚‹ã€‚";
-            }
-        }
-        else
-        {
-            EditorGUILayout.PropertyField(costProp);
-            EditorGUILayout.PropertyField(infoTextProp);
-            if (panelTypeProp.enumValueIndex == (int)PanelType.Lv1)
-            {
-                EditorGUILayout.LabelField("ã‚¹ã‚­ãƒ«ã®åˆæœŸå€¤", EditorStyles.boldLabel);
-                EditorGUILayout.PropertyField(effectTimeProp);
-                EditorGUILayout.PropertyField(recastTimeProp);
-            }
-        }
-        EditorGUILayout.Space();
-
-        // å€¤ã®å¤‰æ›´ãŒç¢ºå®šã—ãŸï¼ˆApplyModifiedPropertiesãŒtrueã‚’è¿”ã—ãŸï¼‰å ´åˆã«ãƒªãƒãƒ¼ãƒ ã‚’å®Ÿè¡Œ
+        // ’l‚Ì•ÏX‚ªŠm’è‚µ‚½iApplyModifiedProperties‚ªtrue‚ğ•Ô‚µ‚½jê‡‚ÉƒŠƒl[ƒ€‚ğÀs
         if (serializedObject.ApplyModifiedProperties())
         {
             RenameWithUniqueNumber();
@@ -80,31 +36,23 @@ public class SkillPanelDataEditor : Editor
     }
 
     /// <summary>
-    /// é‡è¤‡ã—ãªã„åå‰ã‚’ç”Ÿæˆã—ã¦ã‚¢ã‚»ãƒƒãƒˆã‚’ãƒªãƒãƒ¼ãƒ ã™ã‚‹
+    /// d•¡‚µ‚È‚¢–¼‘O‚ğ¶¬‚µ‚ÄƒAƒZƒbƒg‚ğƒŠƒl[ƒ€‚·‚é
     /// </summary>
     private void RenameWithUniqueNumber()
     {
-        SkillPanelData data = (SkillPanelData)target;
+        SkillData data = (SkillData)target;
         string currentPath = AssetDatabase.GetAssetPath(data);
 
-        // å®Ÿè¡Œä¸­ã‚„ãƒ‘ã‚¹ãŒå­˜åœ¨ã—ãªã„å ´åˆã¯ã‚¹ã‚­ãƒƒãƒ—
+        // Às’†‚âƒpƒX‚ª‘¶İ‚µ‚È‚¢ê‡‚ÍƒXƒLƒbƒv
         if (Application.isPlaying || string.IsNullOrEmpty(currentPath)) return;
 
         string folderPath = Path.GetDirectoryName(currentPath);
 
-        // --- ãƒ™ãƒ¼ã‚¹åç”Ÿæˆã®åˆ¤å®š ---
-        // Reinforcementã®å ´åˆã¯ reinforcementType ã‚‚åå‰ã«å«ã‚ã‚‹
-        string baseName;
-        if (data.panelType == PanelType.Reinforcement)
-        {
-            baseName = $"{data.skillType}_{data.panelType}_{data.reinforcementType}{data.level}";
-        }
-        else
-        {
-            baseName = $"{data.skillType}_{data.panelType}";
-        }
+        // --- ƒx[ƒX–¼¶¬‚Ì”»’è ---
+        // Reinforcement‚Ìê‡‚Í reinforcementType ‚à–¼‘O‚ÉŠÜ‚ß‚é
+        string baseName = $"{data.skillType}Data";
 
-        // é‡è¤‡ãƒã‚§ãƒƒã‚¯ã¨é€£ç•ªä»˜ä¸
+        // d•¡ƒ`ƒFƒbƒN‚Æ˜A”Ô•t—^
         int number = 0;
         string targetName = baseName;
         string targetPath = Path.Combine(folderPath, $"{targetName}.asset").Replace("\\", "/");
@@ -116,7 +64,7 @@ public class SkillPanelDataEditor : Editor
             number++;
         }
 
-        // åå‰ãŒå¤‰ã‚ã‚‹å ´åˆã®ã¿ãƒªãƒãƒ¼ãƒ ã‚’å®Ÿè¡Œ
+        // –¼‘O‚ª•Ï‚í‚éê‡‚Ì‚İƒŠƒl[ƒ€‚ğÀs
         if (data.name != targetName)
         {
             AssetDatabase.RenameAsset(currentPath, targetName);
@@ -124,7 +72,7 @@ public class SkillPanelDataEditor : Editor
     }
 
     /// <summary>
-    /// è‡ªåˆ†è‡ªèº«ã‚’é™¤ã„ã¦æŒ‡å®šãƒ‘ã‚¹ã«ãƒ•ã‚¡ã‚¤ãƒ«ãŒå­˜åœ¨ã™ã‚‹ã‹ãƒã‚§ãƒƒã‚¯
+    /// ©•ª©g‚ğœ‚¢‚Äw’èƒpƒX‚Éƒtƒ@ƒCƒ‹‚ª‘¶İ‚·‚é‚©ƒ`ƒFƒbƒN
     /// </summary>
     private bool FileExistsExceptSelf(string targetPath, string myPath)
     {

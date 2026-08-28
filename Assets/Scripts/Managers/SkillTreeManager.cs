@@ -85,6 +85,7 @@ public class SkillTreeManager : MonoBehaviour
     float selectTimer;
     [SerializeField] RectTransform viewport;
     [SerializeField] RectTransform content;
+    Vector2 targetPos;
     Vector2 targetRect;         // 選択されたスキルパネルの位置
     Vector2 viewportSize;       // Viewportのサイズ
     Vector2 contentSize;        // Contentのサイズ
@@ -132,6 +133,7 @@ public class SkillTreeManager : MonoBehaviour
     public void SetInfo(SkillPanel panel, Vector2 target)
     {
         SkillPanelData data = panel.data;
+        targetPos = target;
         // 名前を代入
         string name = $"";
         switch (data.skillType)
@@ -176,7 +178,7 @@ public class SkillTreeManager : MonoBehaviour
         selectSkillPanel = panel;
         acquisitionButton.color = (selectSkillPanel.state == PanelState.Lock) ? panelColors[0] : Color.white;
         acquisitionText.color = (selectSkillPanel.state == PanelState.Lock) ? panelColors[0] : (selectSkillPanel.state == PanelState.UnLock) ? Color.white : panelColors[1];
-        acquisitionText.text = (selectSkillPanel.state == PanelState.Lock) ? $"未開放" : (selectSkillPanel.state == PanelState.UnLock) ? $"獲得" : $"獲得済";
+        acquisitionText.text = (selectSkillPanel.state == PanelState.Lock) ? $"未解放" : (selectSkillPanel.state == PanelState.UnLock) ? $"獲得" : $"獲得済";
 
         infoTexts[0].text = name;
         infoTexts[1].text = $"{ScoreFormatter.FormatToJapanese(data.cost)}p";
@@ -222,6 +224,7 @@ public class SkillTreeManager : MonoBehaviour
                 GameManager.Instance.pAmount -= selectSkillPanel.data.cost;
                 selectSkillPanel.state = PanelState.Acquired;
                 selectPanelLine.UpdatePanelLineState(selectSkillPanel);
+                SetInfo(selectSkillPanel, targetPos);
             }
         }
     }

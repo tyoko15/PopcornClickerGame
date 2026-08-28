@@ -59,44 +59,44 @@ public class PanelLine : MonoBehaviour
         switch (number) 
         {
             case 0:
-                skillPanels[1].state = PanelState.UnLock;
-                skillPanels[3].state = PanelState.UnLock;
+                if (skillPanels[1].state == PanelState.Lock) skillPanels[1].state = PanelState.UnLock;
+                if (skillPanels[3].state == PanelState.Lock) skillPanels[3].state = PanelState.UnLock;
                 break;
             case 1:
-                skillPanels[2].state = PanelState.UnLock;
+                if (skillPanels[2].state == PanelState.Lock) skillPanels[2].state = PanelState.UnLock;
                 break;
             case 2:
             case 4:
-                skillPanels[5].state = PanelState.UnLock;
+                if (skillPanels[5].state == PanelState.Lock) skillPanels[5].state = PanelState.UnLock;
                 break;
             case 3:
-                skillPanels[4].state = PanelState.UnLock;
+                if (skillPanels[4].state == PanelState.Lock) skillPanels[4].state = PanelState.UnLock;
                 break;
             case 5:
-                skillPanels[6].state = PanelState.UnLock;
-                skillPanels[8].state = PanelState.UnLock;
+                if (skillPanels[6].state == PanelState.Lock) skillPanels[6].state = PanelState.UnLock;
+                if (skillPanels[8].state == PanelState.Lock) skillPanels[8].state = PanelState.UnLock;
                 break;
             case 6:
-                skillPanels[7].state = PanelState.UnLock;
+                if (skillPanels[7].state == PanelState.Lock) skillPanels[7].state = PanelState.UnLock;
                 break;
             case 7:
             case 9:
-                skillPanels[10].state = PanelState.UnLock;
+                if (skillPanels[10].state == PanelState.Lock) skillPanels[10].state = PanelState.UnLock;
                 break;
             case 8:
-                skillPanels[9].state = PanelState.UnLock;
+                if (skillPanels[9].state == PanelState.Lock) skillPanels[9].state = PanelState.UnLock;
                 break;
             case 10:
-                skillPanels[11].state = PanelState.UnLock;
-                skillPanels[13].state = PanelState.UnLock;                
+                if (skillPanels[11].state == PanelState.Lock) skillPanels[11].state = PanelState.UnLock;
+                if (skillPanels[13].state == PanelState.Lock) skillPanels[13].state = PanelState.UnLock;                
                 break;
             case 11:
-                skillPanels[12].state = PanelState.UnLock;
+                if (skillPanels[12].state == PanelState.Lock) skillPanels[12].state = PanelState.UnLock;
                 break;
             case 12:
                 break;
             case 13:
-                skillPanels[14].state = PanelState.UnLock;
+                if (skillPanels[14].state == PanelState.Lock) skillPanels[14].state = PanelState.UnLock;
                 break;
             case 14:
                 break;

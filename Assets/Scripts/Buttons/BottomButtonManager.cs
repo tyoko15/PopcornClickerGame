@@ -15,7 +15,7 @@ public class BottomButtonManager: MonoBehaviour
 
     void Start()
     {
-        bottomBanner = ui.transform.GetChild(5).gameObject;
+        bottomBanner = ui.transform.GetChild(4).gameObject;
         commonUIs = new GameObject[3];
         for (int i = 0; i < commonUIs.Length; i++) commonUIs[i] = bottomBanner.transform.GetChild(i).gameObject;
         layers = new GameObject[3];
