@@ -19,15 +19,16 @@ public class SkillPanel : MonoBehaviour
         name = data.name;
         images = new Image[transform.childCount];
         for (int i = 0; i < images.Length; i++) images[i] = transform.GetChild(i).GetComponent<Image>();
-        images[0].sprite = SkillTreeManager.Instance.skillPanelImages[(int)data.panelType];
+        images[0].sprite = SkillTreeManager.Instance.skillPanelImages[(int)data.panelType];     
         if (data.panelType == PanelType.Lv1) state = PanelState.UnLock;
+        //else state = PanelState.Acquired;
         else state = PanelState.Lock;
         Lock();
     }
 
     public void Lock()
     {
-        images[0].color = (state == PanelState.Lock) ? SkillTreeManager.Instance.panelColors[0] : Color.white;
+        images[0].color = (state == PanelState.Lock) ? Color.gray : Color.white;
     }
 
     public void ClickPanel()

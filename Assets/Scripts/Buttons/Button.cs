@@ -23,11 +23,19 @@ public enum AutoButton
     Times,
 }
 
+public enum UnlockButton
+{
+    None,
+    Skill,
+    Room,
+}
+
 public class Button : MonoBehaviour
 {
     [Header("設定")]
     [SerializeField] UpgradeButton upgradeButton = UpgradeButton.None;  // 強化種類
     [SerializeField] AutoButton autoButton = AutoButton.None;           // 自動化種類
+    [SerializeField] UnlockButton unlockButton = UnlockButton.None;     // 開放種類
     [SerializeField] Kind kind = Kind.Regular;                          // ポップコーンの種類     
     [SerializeField] bool lockFlag;         // 開放あるか
     [SerializeField] int lockPlayerLevel;   // 開放プレイヤーレベル
@@ -188,7 +196,20 @@ public class Button : MonoBehaviour
                     break;
             }            
         }
-
+        // 
+        else if (unlockButton != UnlockButton.None)
+        {
+            gameObject.name = $"{unlockButton}Button";
+            switch (unlockButton)
+            {
+                case UnlockButton.Skill:
+                    name = $"スキル開放";
+                    break;
+                case UnlockButton.Room:
+                    name = $"部屋開放";
+                    break;
+            }
+        }
         texts[0].text = name;
         texts[4].text = name;        
 
@@ -308,7 +329,7 @@ public class Button : MonoBehaviour
             {
                 case AutoButton.Count:
                     GameManager.Instance.autoMakerSettings[(int)kind].makerCount += 1 * multiple;
-                    for (int i = 0; i < multiple; i++) GameManager.Instance.AddAutoMaker((int)kind);                    
+                    for (int i = 0; i < multiple; i++) GameManager.Instance.AddAutoMaker((int)kind);
                     break;
                 case AutoButton.RecastTime:
                     GameManager.Instance.autoMakerSettings[(int)kind].makerRecastTime -= 0.5f * multiple;
@@ -319,15 +340,19 @@ public class Button : MonoBehaviour
             }
             GameManager.Instance.UpdateAutoMakerSetting((int)kind);
         }
-
+        else if (unlockButton != UnlockButton.None)
+        {
+            GameManager.Instance.Unlock(unlockButton);
+        }
     }
 
     /// <summary>
     /// Textを更新
     /// </summary>
     void UpdateUI()
-    {
-        texts[1].text = $"Lv.{level}\nMAX {limitLevel}";
+    {        
+        if (unlockButton == UnlockButton.None) texts[1].text = $"Lv.{level}\nMAX {limitLevel}";
+        else texts[1].gameObject.SetActive(false);
         texts[2].text = $"{ScoreFormatter.FormatToJapanese(needAmount)}p";
         float before = 0;
         float after = 0;
@@ -384,6 +409,7 @@ public class Button : MonoBehaviour
             }
         }
 
-        texts[3].text = $"{before}{p}→{after}{p}";
+        if (unlockButton == UnlockButton.None) texts[3].text = $"{before}{p}→{after}{p}";
+        else texts[3].gameObject.SetActive(false);
     }
 }

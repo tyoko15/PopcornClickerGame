@@ -7,8 +7,6 @@ public class BannerButtonManager : MonoBehaviour
     [SerializeField] GameObject banner;         // UI
     GameObject[] layers;                        // 各UIレイヤー
     RectTransform[] buttons;                    // ボタン
-    [SerializeField] Color selectColor;         // 選択中のカラー
-    [SerializeField] Color unSelectColor;       // 未選択のカラー
 
     bool flag;  // UIのONOFF
 
@@ -62,7 +60,6 @@ public class BannerButtonManager : MonoBehaviour
                 {
                     setTimer = 0;
                     setFlag = false;
-
                 }
                 else
                 {

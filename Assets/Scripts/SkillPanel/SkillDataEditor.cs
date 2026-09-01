@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System.IO;
 using UnityEditor;
 using UnityEngine;
@@ -31,6 +32,7 @@ public class SkillDataEditor : Editor
         // 値の変更が確定した（ApplyModifiedPropertiesがtrueを返した）場合にリネームを実行
         if (serializedObject.ApplyModifiedProperties())
         {
+            EditorUtility.SetDirty(data);
             RenameWithUniqueNumber();
         }
     }
@@ -79,3 +81,4 @@ public class SkillDataEditor : Editor
         return targetPath != myPath && File.Exists(targetPath);
     }
 }
+#endif

@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PanelLine : MonoBehaviour
@@ -5,7 +6,8 @@ public class PanelLine : MonoBehaviour
     public SkillPanelData[] skillPanelData;
     public UILine[] lines;
     public SkillPanel[] skillPanels;
-
+    [SerializeField] bool specialFlag;
+    public bool allOpenFlag;
     void Awake()
     {
         skillPanels = new SkillPanel[transform.GetChild(1).childCount];
@@ -15,24 +17,32 @@ public class PanelLine : MonoBehaviour
         {
             lines[i] = transform.GetChild(0).GetChild(i).GetComponent<UILine>();
         }
-        // Skill Lv.1
-        skillPanels[0].data = skillPanelData[0];
-        skillPanels[1].data = skillPanelData[3];
-        skillPanels[2].data = skillPanelData[3];
-        skillPanels[3].data = skillPanelData[6];
-        skillPanels[4].data = skillPanelData[6];
-        // Skill Lv.2
-        skillPanels[5].data = skillPanelData[1];
-        skillPanels[6].data = skillPanelData[4];
-        skillPanels[7].data = skillPanelData[4];
-        skillPanels[8].data = skillPanelData[7];
-        skillPanels[9].data = skillPanelData[7];
-        // Skill Lv.3
-        skillPanels[10].data = skillPanelData[2];
-        skillPanels[11].data = skillPanelData[5];
-        skillPanels[12].data = skillPanelData[5];
-        skillPanels[13].data = skillPanelData[8];
-        skillPanels[14].data = skillPanelData[8];
+
+        if (!specialFlag)
+        {
+            // Skill Lv.1
+            skillPanels[0].data = skillPanelData[0];
+            skillPanels[1].data = skillPanelData[3];
+            skillPanels[2].data = skillPanelData[3];
+            skillPanels[3].data = skillPanelData[6];
+            skillPanels[4].data = skillPanelData[6];
+            // Skill Lv.2
+            skillPanels[5].data = skillPanelData[1];
+            skillPanels[6].data = skillPanelData[4];
+            skillPanels[7].data = skillPanelData[4];
+            skillPanels[8].data = skillPanelData[7];
+            skillPanels[9].data = skillPanelData[7];
+            // Skill Lv.3
+            skillPanels[10].data = skillPanelData[2];
+            skillPanels[11].data = skillPanelData[5];
+            skillPanels[12].data = skillPanelData[5];
+            skillPanels[13].data = skillPanelData[8];
+            skillPanels[14].data = skillPanelData[8];
+        }
+        else
+        {
+            skillPanels[0].data = skillPanelData[0];           
+        }
     }
 
     void Start()
@@ -41,20 +51,37 @@ public class PanelLine : MonoBehaviour
         for (int i = 0; i < lines.Length; i++) lines[i].SetLineColor();
     }
 
-    void Update()
-    {
-        
-    }
-
     public void SetLineColor()
     {
         for (int i = 0; i < lines.Length; i++) lines[i].SetLineColor();
     }
 
+    public void UnlockSpecialPanel()
+    {
+        skillPanels[skillPanels.Length - 1].state = PanelState.UnLock;
+        skillPanels[skillPanels.Length - 1].Lock();
+        SetLineColor();
+    }
+
+    public void AcquiredSpecialPanel()
+    {
+        SkillListManager.Instance.MaxSkill();
+        skillPanels[skillPanels.Length - 1].state = PanelState.Acquired;
+        skillPanels[skillPanels.Length - 1].Lock();
+        SetLineColor();
+    }
+
     public void UpdatePanelLineState(SkillPanel panel)
     {
         int number = 0;
-        for (int i = 0; i < skillPanels.Length; i++) if (panel == skillPanels[i]) number = i;
+        for (int i = 0; i < skillPanels.Length; i++)
+        {
+            if (panel == skillPanels[i])
+            {
+                number = i; 
+                break;
+            }
+        }
         // ŽŸ‚Ìƒpƒlƒ‹‚Ì‰ðœ‚·‚é
         switch (number) 
         {
@@ -101,7 +128,16 @@ public class PanelLine : MonoBehaviour
             case 14:
                 break;
         }
-
+        bool allFlag = false;
+        for (int i = 0; i < skillPanels.Length; i++) 
+        {
+            if (skillPanels[i].state != PanelState.Acquired)
+            {
+                allFlag = true; 
+                break;
+            }
+        }
+        if (!allFlag) allOpenFlag = true;
         for (int i = 0; i < skillPanels.Length; i++) skillPanels[i].Lock();
         SetLineColor();
     }

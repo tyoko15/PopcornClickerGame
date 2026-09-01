@@ -16,7 +16,7 @@ MonoBehaviour:
   panelType: 3
   reinforcementType: 0
   level: 2
-  cost: 10000
+  cost: 1000000
   infoText: "\u52B9\u679C\u6642\u9593\u30921\u79D2\u5EF6\u9577\u3059\u308B\u3002"
   effectTime: 1
   recastTime: 0

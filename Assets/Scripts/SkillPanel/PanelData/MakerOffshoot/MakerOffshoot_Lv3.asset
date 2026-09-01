@@ -14,9 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SkillPanelData
   skillType: 4
   panelType: 2
+  effectValue: 5
   reinforcementType: 0
   level: 0
-  cost: 10000000
+  cost: 1000000000
   infoText: "\u7A3C\u50CD\u4E2D\u306E\u5168\u30DE\u30B7\u30F3\u306E\\n5\u500D\u306E\u6570\u306B\u306A\u308B\u3002"
   effectTime: 0
   recastTime: 0

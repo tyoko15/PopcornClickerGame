@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using TMPro;
-using UnityEngine;
-using UnityEngine.Rendering.Universal;
+﻿using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
+using UnityEngine;
+using System;
+using TMPro;
 
 // メーカーの種類
 public enum Kind
@@ -73,6 +73,9 @@ public class GameManager : MonoBehaviour
     TextMeshProUGUI[] repeatTexts;                          // 鬼連打のテキスト
     TextMeshProUGUI[] uiTexts = new TextMeshProUGUI[26];    // 情報一覧のテキスト
     TextMeshProUGUI[] recordTexts = new TextMeshProUGUI[5]; // 記録のテキスト
+    [SerializeField] GameObject bottomBannerButtons;
+    [SerializeField] GameObject skillUI;
+    TextMeshProUGUI[] skillTexts;
     [SerializeField] GameObject[] buttons;                  // 
     [HideInInspector] public int multiple = 1;              // 現在のボタン倍数
     public event Action<int> UpdateMultiple;                // 倍数更新用
@@ -101,7 +104,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject popcornPrefab;                  // ポップコーンプレハブ
     [HideInInspector] public float popcornForceMultiple = 1f;   // ポップコーン生産勢力
 
-    // 連打    
+    // 連打
+    bool feverFlag;
     bool repeatFlag;                // 連打中フラグ
     int repeatCount;                // 連打回数
     public int recordRepeatCount;   // 最大連打回数
@@ -116,6 +120,31 @@ public class GameManager : MonoBehaviour
     int maxCPS;         // 最大連打速度
     Queue<float> clickTimestamps = new Queue<float>();  // 連打速度の記録用
 
+    // 発動スキル
+    public bool activeFlag;
+    SkillType activeSkillType;
+    float activeEffectTime;
+    float activeEffectTimer;
+    string activeInfoText;
+    // 発動スキルの変数
+    // BonusUp
+    int bonusUpSkill = 1;
+    // Critical
+    int criticalSkill = 0;
+    // Fever
+    bool feverSkillFlag;
+    int totalFeverPAmount;
+    // FixedPopcorn
+    int fixedPopcornSkill = 1;
+    // MakerOffshoot
+    public int makerOffshootSkill = 1;
+    // MakerSpeedUp
+    public float makerSpeedUpSkill = 1;
+    // MakerTimesUp
+    public int makerTimesUpSkill = 1;
+    // TimesUp
+    int timesUpSkill = 1;
+
     // ゲーム開始の演出
     [SerializeField] Light2D baseLight; // ベースライト
     [SerializeField] Light2D spotLight; // スポットライト
@@ -126,7 +155,7 @@ public class GameManager : MonoBehaviour
 
     // ゲームポーズ
     public bool pauseFlag;
-    public int pauseTime;
+    public int pauseTime = 1;
 
     // 検証用オートクリッカー(本番では停止)
     [SerializeField] bool autoClickFlag;
@@ -148,7 +177,8 @@ public class GameManager : MonoBehaviour
         // 鬼連打テキストの初期化&取得
         repeatTexts = new TextMeshProUGUI[repeatUI.transform.childCount];
         for (int i = 0; i < repeatUI.transform.childCount; i++) repeatTexts[i] = repeatUI.transform.GetChild(i).GetComponent<TextMeshProUGUI>();
-
+        skillTexts = new TextMeshProUGUI[skillUI.transform.childCount];
+        for (int i = 0; i < skillTexts.Length; i++) skillTexts[i] = skillUI.transform.GetChild(i).GetComponent<TextMeshProUGUI>();
         // バージョンテキストの更新
         versionionText.text = $"v{Application.version}";
 
@@ -176,6 +206,7 @@ public class GameManager : MonoBehaviour
         UpdateUI();     // UI更新
         Repeat();       // 連打計測
         CPS();          // 連打速度計測
+        Skill();
 
         if (Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.C) && Input.GetKey(KeyCode.F)) autoClickFlag = true;
         else if (Input.GetKey(KeyCode.F)) autoClickFlag = false;
@@ -193,7 +224,7 @@ public class GameManager : MonoBehaviour
     {
         if (startTimer > startTime)     // ゲーム開始演出終了
         {
-            for (int i = 0; i < UI.transform.childCount - 1; i++) UI.transform.GetChild(i).gameObject.SetActive(true);
+            for (int i = 0; i < 4; i++) UI.transform.GetChild(i).gameObject.SetActive(true);            
             baseLight.intensity = 1f;
             spotLight.gameObject.SetActive(false);
             spotLight.pointLightOuterAngle = 45f;
@@ -228,7 +259,7 @@ public class GameManager : MonoBehaviour
         uiTexts[u++].text = $"{ScoreFormatter.FormatToJapanese(recordPAmount)}p";                           // 最大ポップコーンスコア
         uiTexts[u++].text = $"{ScoreFormatter.FormatToJapanese(clickCount)}回";                             // 通算クリック数
         uiTexts[u++].text = $"{ScoreFormatter.FormatToJapanese(maxCPS)} 回/秒";                             // 瞬間クリック速度
-        uiTexts[u++].text = $"{ScoreFormatter.FormatToJapanese(currentCPS)} 回/秒";                           // 瞬間クリック速度
+        uiTexts[u++].text = $"{ScoreFormatter.FormatToJapanese(currentCPS)} 回/秒";                         // 瞬間クリック速度
         uiTexts[u++].text = $"{hour.ToString("00")}:{minute.ToString("00")}:{second.ToString("00")}";       // プレイ時間
         // 効率
         uiTexts[u++].text = $"{ScoreFormatter.FormatToJapanese(CalculateClickExpectedValue())}p";           // 1クリックで稼げる平均スコア
@@ -242,19 +273,82 @@ public class GameManager : MonoBehaviour
         uiTexts[u++].text = $"{rainbowRate}%";      // レインボー出現確率
         uiTexts[u++].text = $"すべて外れると出現";  // レインボー出現確率
         // 自動マシン
-        for (int i = 0; i < autoMakerSettings.Length; i++)
+        if (makerOffshootSkill != 1)
         {
-            uiTexts[i * 2 + u].text = $"{autoMakerSettings[i].makerCount}機";                                                // 機数
-            uiTexts[i * 2 + u + 1].text = $"{autoMakerSettings[i].makerRecastTime}秒に{autoMakerSettings[i].makerTimes}回";  // 生産時間と生産量
+            for (int i = 0; i < autoMakerSettings.Length; i++)
+            {
+                uiTexts[i * 2 + u].text = $"<color=#23B500>{autoMakerSettings[i].makerCount * makerOffshootSkill}機</color>";                      // 機数
+                uiTexts[i * 2 + u + 1].text = $"{(autoMakerSettings[i].makerRecastTime).ToString("F1")}秒に{autoMakerSettings[i].makerTimes}回";   // 生産時間と生産量
+            }
+        }
+        else if (makerSpeedUpSkill != 1f)
+        {
+            for (int i = 0; i < autoMakerSettings.Length; i++)
+            {
+                uiTexts[i * 2 + u].text = $"{autoMakerSettings[i].makerCount}機";                                                                                                                      // 機数
+                uiTexts[i * 2 + u + 1].text = $"<color=#23B500>{(autoMakerSettings[i].makerRecastTime * (2f - makerSpeedUpSkill)).ToString("F1")}秒</color>に{autoMakerSettings[i].makerTimes}回";     // 生産時間と生産量
+            }
+        }
+        else if (makerTimesUpSkill != 1)
+        {
+            for (int i = 0; i < autoMakerSettings.Length; i++)
+            {
+                uiTexts[i * 2 + u].text = $"{autoMakerSettings[i].makerCount}機";                                                                                                                  // 機数
+                uiTexts[i * 2 + u + 1].text = $"{autoMakerSettings[i].makerRecastTime}秒に<color=#23B500>{autoMakerSettings[i].makerTimes * GameManager.Instance.makerTimesUpSkill}回</color>";    // 生産時間と生産量
+            }
+        }
+        else
+        {
+            for (int i = 0; i < autoMakerSettings.Length; i++)
+            {
+                uiTexts[i * 2 + u].text = $"{autoMakerSettings[i].makerCount}機";                                                // 機数
+                uiTexts[i * 2 + u + 1].text = $"{autoMakerSettings[i].makerRecastTime}秒に{autoMakerSettings[i].makerTimes}回";  // 生産時間と生産量
+            }
         }
         // 合計ポップコーンスコア
         pAmountText.text = $"{ScoreFormatter.FormatToJapanese(pAmount)}p";
 
         u = 1;  // インデックス初期化
-        repeatTexts[u++].text = $"{repeatCount.ToString("N0")} COMBO!";                                     // 現在の連打数
-        repeatTexts[u++].text = $"BONUS {repeatBonus.ToString("F1")}x";                                     // 連打ボーナス
+        repeatTexts[u++].text = $"{repeatCount.ToString("N0")} <size=25>COMBO</size>!";                                     // 現在の連打数
+        repeatTexts[u++].text = $"<size=25>BONUS</size> {repeatBonus.ToString("F1")}x";                                     // 連打ボーナス
         repeatTexts[u++].text = $"次のアップまで\n残り{nextBonusCount}回(+{nextBonus.ToString("F1")}x)";    // 次のボーナスアップまで必要な連打数と次のボーナスアップ
         repeatTexts[u++ + 1].text = $"{recordRepeatCount.ToString("N0")}回";                                // 最大連打数
+
+        u = 1;
+        string name = $"";
+        switch (activeSkillType)
+        {
+            case SkillType.None :
+                name = $"";
+                break;
+            case SkillType.FixedPopcorn:
+                name = $"生産固定化";
+                break;
+            case SkillType.TimesUp:
+                name = $"生産量アップ";
+                break;
+            case SkillType.BonusUp:
+                name = $"スコア倍率アップ";
+                break;
+            case SkillType.MakerOffshoot:
+                name = $"マシン数アップ";
+                break;
+            case SkillType.MakerSpeedUp:
+                name = $"マシン生産速度アップ";
+                break;
+            case SkillType.MakerTimesUp:
+                name = $"マシン生産量アップ";
+                break;
+            case SkillType.Critical:
+                name = $"クリティカル";
+                break;
+            case SkillType.Fever:
+                name = $"フィーバー";
+                break;
+        }
+        skillTexts[u++].text = name;
+        skillTexts[u++].text = $"{(activeEffectTime-activeEffectTimer).ToString("F1")}秒";
+        skillTexts[u++].text = activeInfoText;
 
         u = 0;  // インデックス初期化
         recordTexts[u++].text = $"{ScoreFormatter.FormatToJapanese(regularCount)}個";        // レギュラー個数
@@ -438,8 +532,9 @@ public class GameManager : MonoBehaviour
                 spotLight.pointLightOuterRadius = 10f; 
                 popcornForceMultiple = 1f;
                 repeatFlag = false;
+                feverFlag = false;
             }
-            else repeatTimer += Time.deltaTime * GameManager.Instance.pauseTime;
+            else repeatTimer += Time.deltaTime * pauseTime;
         }
 
         // 100回未満の連打中
@@ -452,6 +547,7 @@ public class GameManager : MonoBehaviour
         // 1000回未満の連打中
         else if (repeatCount < 1000)
         {
+            if (!feverFlag) feverFlag = true;
             if (!AudioManager.Instance.bgmSources[1].isPlaying)
             {
                 AudioManager.Instance.PlayBGM(1);
@@ -535,6 +631,125 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void SetSkill(SkillType skillType, int level, float effectTime, string infoText)
+    {
+        activeSkillType = skillType;
+        activeEffectTime = effectTime;
+        activeInfoText = infoText;
+
+        switch (activeSkillType)
+        {
+            case SkillType.BonusUp:
+                bonusUpSkill = (level == 1) ? 2 : (level == 2) ? 3 : 5;
+                break;
+            case SkillType.Critical:
+                criticalSkill = (level == 1) ? 10 : (level == 2) ? 25 : 50;
+                break;
+            case SkillType.Fever:
+                feverSkillFlag = true;
+                break;
+            case SkillType.FixedPopcorn:
+                fixedPopcornSkill = (level == 1) ? 2 : (level == 2) ? 3 : 4;
+                break;
+            case SkillType.MakerOffshoot:
+                break;
+            case SkillType.MakerSpeedUp:
+                makerSpeedUpSkill = (level == 1) ? 1.1f : (level == 2) ? 1.25f : 1.5f;
+                break;
+            case SkillType.MakerTimesUp:
+                makerTimesUpSkill = (level == 1) ? 2 : (level == 2) ? 3 : 5;
+                break;
+            case SkillType.TimesUp:
+                timesUpSkill = (level == 1) ? 2 : (level == 2) ? 3 : 5;
+                break;
+        }
+
+        skillUI.SetActive(true);
+        string name = $"";
+        switch (activeSkillType)
+        {
+            case SkillType.None:
+                name = $"";
+                break;
+            case SkillType.FixedPopcorn:
+                name = $"生産固定化";
+                break;
+            case SkillType.TimesUp:
+                name = $"生産量アップ";
+                break;
+            case SkillType.BonusUp:
+                name = $"スコア倍率アップ";
+                break;
+            case SkillType.MakerOffshoot:
+                name = $"マシン数アップ";
+                break;
+            case SkillType.MakerSpeedUp:
+                name = $"マシン生産速度アップ";
+                break;
+            case SkillType.MakerTimesUp:
+                name = $"マシン生産量アップ";
+                break;
+            case SkillType.Critical:
+                name = $"クリティカル";
+                break;
+            case SkillType.Fever:
+                name = $"フィーバー";
+                break;
+        }
+        skillTexts[1].text = name;
+        skillTexts[2].text = $"残り {effectTime.ToString("F1")}秒";
+        skillTexts[3].text = infoText;
+
+        activeFlag = true;
+    }
+
+    void Skill()
+    {
+        if (!activeFlag) return;
+        
+        if (activeEffectTimer > activeEffectTime)
+        {
+            SkillListManager.Instance.RecastSkill(activeSkillType);
+            switch (activeSkillType)
+            {
+                case SkillType.BonusUp:
+                    bonusUpSkill = 1;
+                    break;
+                case SkillType.Critical:
+                    criticalSkill = 0;
+                    break;
+                case SkillType.Fever:
+                    pAmount += totalFeverPAmount;
+                    totalFeverPAmount = 0;
+                    feverSkillFlag = false;
+                    break;
+                case SkillType.FixedPopcorn:
+                    fixedPopcornSkill = 1;
+                    break;
+                case SkillType.MakerOffshoot:
+                    makerOffshootSkill = 1;
+                    break;
+                case SkillType.MakerSpeedUp:
+                    makerSpeedUpSkill = 1f;
+                    break;
+                case SkillType.MakerTimesUp:
+                    makerTimesUpSkill = 1;
+                    break;
+                case SkillType.TimesUp:
+                    timesUpSkill = 1;
+                    break;
+            }
+
+            activeEffectTimer = 0;
+            activeFlag = false;
+            skillUI.SetActive(false);
+        }
+        else
+        {
+            activeEffectTimer += Time.deltaTime * pauseTime;
+        }
+    }
+
     /// <summary>
     /// クリック関数
     /// </summary>
@@ -547,12 +762,13 @@ public class GameManager : MonoBehaviour
             startFlag = true;
         }
         // 生産量に合わせて実行
-        for (int i = 0; i < times; i++)
+        for (int i = 0; i < times * timesUpSkill; i++)
         {
             int kind = Lottery();                                                                       // ランダムでポップコーンの種類を決定
             Transform spawnPoint = mainMaker.transform.GetChild(0);                                     // ポップコーンの出現位置を指定
             GameObject p = PopcornPool.Instance.GetPopcorn(spawnPoint.position, spawnPoint.rotation);   // ポップコーンプールからポップコーンを生産
-            p.GetComponent<Popcorn>().InitImage(popcornSprites[kind - 1], kind);                              // ポップコーンのイラストを設定
+            p.GetComponent<Popcorn>().InitImage(popcornSprites[kind - 1], kind);                        // ポップコーンのイラストを設定
+            
         }
 
         // 連打用
@@ -574,7 +790,7 @@ public class GameManager : MonoBehaviour
         if (kind == 0) kind = Lottery();                                                            // ランダムでポップコーンの種類を決定
         Transform spawnPoint = spawner.transform;                                                   // ポップコーンの出現位置を指定
         GameObject p = PopcornPool.Instance.GetPopcorn(spawnPoint.position, spawnPoint.rotation);   // ポップコーンプールからポップコーンを生産
-        p.GetComponent<Popcorn>().InitImage(popcornSprites[kind - 1], kind);                              // ポップコーンのイラストを設定                                              
+        p.GetComponent<Popcorn>().InitImage(popcornSprites[kind - 1], kind);                        // ポップコーンのイラストを設定                                              
     }
 
     /// <summary>
@@ -584,29 +800,62 @@ public class GameManager : MonoBehaviour
     int Lottery()
     {
         totalPopcornCount++;
+
+        switch (fixedPopcornSkill)
+        {
+            case 2:
+                pAmount += (int)(score * repeatBonus * 2 * bonusUpSkill);
+                currentUpScore = (int)(score * repeatBonus * 2 * bonusUpSkill);
+                totalPAmount += currentUpScore;
+                if (feverSkillFlag) totalFeverPAmount += currentUpScore;
+                caramelCount++;
+                return fixedPopcornSkill;
+            case 3:
+                pAmount += (int)(score * repeatBonus * 3 * bonusUpSkill);
+                currentUpScore = (int)(score * repeatBonus * 3 * bonusUpSkill);
+                totalPAmount += currentUpScore;
+                if (feverSkillFlag) totalFeverPAmount += currentUpScore;
+                chocolateCount++;
+                return fixedPopcornSkill;
+            case 4:
+                pAmount += (int)(score * repeatBonus * 5 * bonusUpSkill);
+                currentUpScore = (int)(score * repeatBonus * 5 * bonusUpSkill);
+                totalPAmount += currentUpScore;
+                if (feverSkillFlag) totalFeverPAmount += currentUpScore;
+                rainbowCount++;
+                return fixedPopcornSkill;
+        }
+
+        int criticalBonus = 1;
+        if (criticalSkill == 0) criticalBonus = 1;
+        else if (UnityEngine.Random.Range(0, 100) < criticalSkill) criticalBonus = 5;
+
         if (UnityEngine.Random.Range(0, 100) < rainbowRate)
         {
-            pAmount += (int)(score * repeatBonus * 5);
-            currentUpScore = (int)(score * repeatBonus * 5);
+            pAmount += (int)(score * repeatBonus * 5 * bonusUpSkill * criticalBonus);
+            currentUpScore = (int)(score * repeatBonus * 5 * bonusUpSkill * criticalBonus);
             totalPAmount += currentUpScore;
+            if (feverSkillFlag) totalFeverPAmount += currentUpScore;
             rainbowCount++;
             return 4;
         }
 
         if (UnityEngine.Random.Range(0, 100) < chocolateRate)
         {
-            pAmount += (int)(score * repeatBonus * 3);
-            currentUpScore = (int)(score * repeatBonus * 3);
+            pAmount += (int)(score * repeatBonus * 3 * bonusUpSkill * criticalBonus);
+            currentUpScore = (int)(score * repeatBonus * 3 * bonusUpSkill * criticalBonus);
             totalPAmount += currentUpScore;
+            if (feverSkillFlag) totalFeverPAmount += currentUpScore;
             chocolateCount++;
             return 3;
         }
 
         if (UnityEngine.Random.Range(0, 100) < caramelRate)
         {
-            pAmount += (int)(score * repeatBonus * 2);
-            currentUpScore = (int)(score * repeatBonus * 2);
+            pAmount += (int)(score * repeatBonus * 2 * bonusUpSkill * criticalBonus);
+            currentUpScore = (int)(score * repeatBonus * 2 * bonusUpSkill * criticalBonus);
             totalPAmount += currentUpScore;
+            if (feverSkillFlag) totalFeverPAmount += currentUpScore;
             caramelCount++;
             return 2;
         }
@@ -617,11 +866,27 @@ public class GameManager : MonoBehaviour
             RankingManager.Instance.SendRecordPAmount();
         }
 
-        pAmount += (int)(score * repeatBonus);
-        currentUpScore = (int)(score * repeatBonus);
+        pAmount += (int)(score * repeatBonus * bonusUpSkill * criticalBonus);
+        currentUpScore = (int)(score * repeatBonus * criticalBonus);
         totalPAmount += currentUpScore;
+        if (feverSkillFlag) totalFeverPAmount += currentUpScore;
         regularCount++;
         return 1;
+    }
+
+    public void Unlock(UnlockButton unlock)
+    {
+        bottomBannerButtons.SetActive(true);
+        switch (unlock)
+        {
+            case UnlockButton.Skill:
+                bottomBannerButtons.transform.GetChild(0).gameObject.SetActive(true);
+                bottomBannerButtons.transform.GetChild(1).gameObject.SetActive(true);
+                break;
+            case UnlockButton.Room:
+                bottomBannerButtons.transform.GetChild(2).gameObject.SetActive(true);
+                break;
+        }
     }
 
     /// <summary>

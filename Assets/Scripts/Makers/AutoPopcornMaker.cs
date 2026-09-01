@@ -21,12 +21,12 @@ public class AutoPopcornMaker : MonoBehaviour
         // ¶ŽY
         if (recastTimer > recastTime)
         {
-            for (int i = 0; i < times; i++) GameManager.Instance.AutoClick((int)kind, spwaner);
+            for (int i = 0; i < times * GameManager.Instance.makerOffshootSkill * GameManager.Instance.makerTimesUpSkill; i++) GameManager.Instance.AutoClick((int)kind, spwaner);
             recastTimer = 0;
         }
         else
         {
-            recastTimer += Time.deltaTime * GameManager.Instance.pauseTime;
+            recastTimer += Time.deltaTime * GameManager.Instance.makerSpeedUpSkill * GameManager.Instance.pauseTime;
             gauge.fillAmount = Mathf.InverseLerp(0f, recastTime, recastTimer);
         }
     }

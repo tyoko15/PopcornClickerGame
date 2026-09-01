@@ -4,34 +4,23 @@ using UnityEngine;
 public class BottomButtonManager: MonoBehaviour
 {
     [SerializeField] GameObject ui;
-    GameObject bottomBanner;
+    [SerializeField] GameObject bottomBanner;
     GameObject[] commonUIs;
     GameObject[] layers;
     TextMeshProUGUI nameText;
 
-    GameObject otherUI;
-
-
+    [SerializeField] GameObject otherUI;
 
     void Start()
     {
-        bottomBanner = ui.transform.GetChild(4).gameObject;
         commonUIs = new GameObject[3];
         for (int i = 0; i < commonUIs.Length; i++) commonUIs[i] = bottomBanner.transform.GetChild(i).gameObject;
         layers = new GameObject[3];
         for (int i = 0; i < layers.Length; i++) layers[i] = bottomBanner.transform.GetChild(i + 3).gameObject;
         nameText = bottomBanner.transform.GetChild(2).GetComponent<TextMeshProUGUI>();
-        otherUI = ui.transform.GetChild(6).gameObject;
         ClickReturn();
     }
-
-    void Update()
-    {
-        
-    }
-
-    
-
+   
     public void ClickButton(int i)
     {
         GameManager.Instance.Pause(true);
@@ -59,6 +48,7 @@ public class BottomButtonManager: MonoBehaviour
         bottomBanner.SetActive(false);
         for (int i = 0; i < commonUIs.Length; i++) commonUIs[i].SetActive(false);
         for (int i = 0; i < layers.Length; i++) layers[i].SetActive(false);
+        GameManager.Instance.Pause(false);
         otherUI.SetActive(true);
     }
 }

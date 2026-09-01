@@ -51,21 +51,13 @@ public enum PanelType
     Lv2,
     Lv3,
     Reinforcement,
+    Special,
 }
 
 public enum Reinforcement
 {
     EffectTime,
     RecastTime
-}
-
-[System.Serializable]
-public class SkillInfo
-{
-    public SkillType skillType;
-    public PanelType panelType;
-    public int cost;
-    public string infoText;
 }
 
 public class SkillTreeManager : MonoBehaviour
@@ -79,7 +71,7 @@ public class SkillTreeManager : MonoBehaviour
 
     // 選択
     bool selectFlag;
-    public Color[] panelColors;
+    //public Color[] panelColors;
     [SerializeField] Image selectImage;
     [SerializeField] float selectTime;
     float selectTimer;
@@ -99,16 +91,20 @@ public class SkillTreeManager : MonoBehaviour
     Image acquisitionButton;
     TextMeshProUGUI acquisitionText;
 
+    bool oneFlag;
+
     private void Awake()
     {
         Instance = this;
         infoTexts = new TextMeshProUGUI[4];
         for (int i = 0; i < infoTexts.Length; i++) infoTexts[i] = layer.transform.GetChild(1).GetChild(i).GetComponent<TextMeshProUGUI>();
         selectImage.gameObject.SetActive(false);
-        panelLines = new PanelLine[8];
+        panelLines = new PanelLine[9];
         for (int i = 0; i < panelLines.Length; i++) panelLines[i] = layer.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(i).GetComponent<PanelLine>();        
-        skillPanels = new SkillPanel[15 * 8];
-        for (int i = 0; i < 8; i++) for (int j = 0; j < 15; j++) skillPanels[i * 15 + j] = layer.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(i).GetChild(1).GetChild(j).GetComponent<SkillPanel>();
+        skillPanels = new SkillPanel[15 * 8 + 1];
+        for (int i = 0; i < 8; i++) for (int j = 0; j < 15; j++) skillPanels[i * 15 + j] = layer.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(i+1).GetChild(1).GetChild(j).GetComponent<SkillPanel>();
+        skillPanels[skillPanels.Length - 1] = layer.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(1).GetChild(0).GetComponent<SkillPanel>();
+        skillPanels[skillPanels.Length - 1].InitVariable();
         acquisitionButton = layer.transform.GetChild(1).GetChild(5).GetComponent<Image>();
         acquisitionText = layer.transform.GetChild(1).GetChild(5).GetChild(0).GetComponent<TextMeshProUGUI>();
     }
@@ -123,11 +119,28 @@ public class SkillTreeManager : MonoBehaviour
         infoTexts[1].text = $"";
         infoTexts[2].text = $"";
         infoTexts[3].text = $"";
+        acquisitionButton.color = Color.gray;
+        acquisitionText.color = Color.gray;
+        acquisitionText.text = $"未選択";
     }
 
     void Update()
     {
         if (selectFlag) PickUpSkillPanel();
+        bool specialFlag = false;
+        for (int i = 0; i < panelLines.Length - 1; i++)
+        {
+            if (!panelLines[i + 1].allOpenFlag)
+            {
+                specialFlag = true;
+                break;
+            }
+        }
+        if (!specialFlag && !oneFlag)
+        {
+            UnlockSpecialPanel();
+            oneFlag = true;
+        }
     }
 
     public void SetInfo(SkillPanel panel, Vector2 target)
@@ -138,6 +151,9 @@ public class SkillTreeManager : MonoBehaviour
         string name = $"";
         switch (data.skillType)
         {
+            case SkillType.None:
+                if (data.panelType == PanelType.Special) name = $"全開放";
+                break;
             case SkillType.FixedPopcorn:
                 name = $"生産固定化";
                 break;
@@ -176,10 +192,15 @@ public class SkillTreeManager : MonoBehaviour
         }
         
         selectSkillPanel = panel;
-        acquisitionButton.color = (selectSkillPanel.state == PanelState.Lock) ? panelColors[0] : Color.white;
-        acquisitionText.color = (selectSkillPanel.state == PanelState.Lock) ? panelColors[0] : (selectSkillPanel.state == PanelState.UnLock) ? Color.white : panelColors[1];
+        acquisitionButton.color = (selectSkillPanel.state == PanelState.Lock) ? Color.gray : (selectSkillPanel.state == PanelState.UnLock) ? Color.white : Color.gray;
+        acquisitionText.color = (selectSkillPanel.state == PanelState.Lock) ? Color.gray : (selectSkillPanel.state == PanelState.UnLock) ? Color.white : Color.yellow;
         acquisitionText.text = (selectSkillPanel.state == PanelState.Lock) ? $"未解放" : (selectSkillPanel.state == PanelState.UnLock) ? $"獲得" : $"獲得済";
-
+        if (selectSkillPanel.state == PanelState.UnLock && data.cost >= GameManager.Instance.pAmount)
+        {
+            acquisitionButton.color = Color.gray;
+            acquisitionText.color = Color.gray;
+            acquisitionText.text = "不足";
+        }
         infoTexts[0].text = name;
         infoTexts[1].text = $"{ScoreFormatter.FormatToJapanese(data.cost)}p";
         infoTexts[2].text = $"{ScoreFormatter.FormatToJapanese(GameManager.Instance.pAmount)}p";
@@ -192,6 +213,10 @@ public class SkillTreeManager : MonoBehaviour
         selectFlag = true;
     }
 
+    void UnlockSpecialPanel()
+    {
+        panelLines[0].UnlockSpecialPanel();
+    }
 
 
     void PickUpSkillPanel()
@@ -221,9 +246,36 @@ public class SkillTreeManager : MonoBehaviour
         {
             if (selectSkillPanel.data.cost <= GameManager.Instance.pAmount)
             {
+                // 獲得の処理
                 GameManager.Instance.pAmount -= selectSkillPanel.data.cost;
                 selectSkillPanel.state = PanelState.Acquired;
-                selectPanelLine.UpdatePanelLineState(selectSkillPanel);
+
+                // SkillListを更新
+                if (selectSkillPanel.data.panelType == PanelType.Lv1)
+                {
+                    SkillDataInfo info = new SkillDataInfo();                   
+                    info.skillType = selectSkillPanel.data.skillType;
+                    info.level = 1;
+                    info.effectTime = selectSkillPanel.data.effectTime;
+                    info.effectTimer = 0f;
+                    info.recastFlag = false;     // 実験用
+                    info.recastTime = selectSkillPanel.data.recastTime;
+                    info.recastTimer = 0f;
+                    info.infoText = selectSkillPanel.data.infoText;
+
+                    SkillListManager.Instance.RegistrationSkill(info);
+                }
+                else if (selectSkillPanel.data.panelType == PanelType.Reinforcement)
+                {
+                    SkillListManager.Instance.UpdateSkill(selectSkillPanel.data);
+                }
+                else
+                {
+                    SkillListManager.Instance.UpgradeSkill(selectSkillPanel.data);
+                }
+                // UIの更新
+                if (panelLines[0] == selectPanelLine) selectPanelLine.AcquiredSpecialPanel();
+                else selectPanelLine.UpdatePanelLineState(selectSkillPanel);
                 SetInfo(selectSkillPanel, targetPos);
             }
         }

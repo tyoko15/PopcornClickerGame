@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65d3bea9be554ad4aa591121e3b7c910, type: 3}
+  m_Name: SkillPanelCostMaster
+  m_EditorClassIdentifier: Assembly-CSharp::SkillPanelCostMaster
+  costLv1: 1000000
+  costLv2: 50000000
+  costLv3: 1000000000
+  costReinforcementLv1: 1500000
+  costReinforcementLv2: 75000000
+  costReinforcementLv3: 1500000000
+  effectTime: 10
+  recastTime: 60
+  effectTimeLv1: 0.5
+  effectTimeLv2: 1
+  effectTimeLv3: 3.5
+  recastTimeLv1: 2.5
+  recastTimeLv2: 4
+  recastTimeLv3: 8.5
